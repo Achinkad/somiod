@@ -7,7 +7,7 @@ using System.Web;
 
 namespace SOMIOD.Controllers
 {
-    public abstract class DataBaseConnection
+    public abstract class DatabaseConnection
     {
         protected SqlConnection conn;
         protected String connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\marco\\Desktop\\IS coisas\\SOMIOD\\SOMIOD\\App_Data\\Database1.mdf\";Integrated Security=True";

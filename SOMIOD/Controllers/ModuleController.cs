@@ -8,7 +8,7 @@ using System.Web;
 
 namespace SOMIOD.Controllers
 {
-    public class ModuleController : DataBaseConnection
+    public class ModuleController : DatabaseConnection
     {
 
         private List<Module> modules;

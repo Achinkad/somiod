@@ -7,7 +7,7 @@ using System.Web;
 
 namespace SOMIOD.Controllers
 {
-    public class SubscriptionController : DataBaseConnection
+    public class SubscriptionController : DatabaseConnection
     {
         private List<Subscription> subscriptions;
         public List<Subscription> Select()
