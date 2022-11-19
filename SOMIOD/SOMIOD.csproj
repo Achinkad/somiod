@@ -85,7 +85,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\DataBaseConnection.cs" />
+    <Compile Include="Controllers\ModuleController.cs" />
     <Compile Include="Controllers\SOMIODController.cs" />
+    <Compile Include="Controllers\SubscriptionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
