@@ -13,33 +13,28 @@ namespace SOMIOD.Controllers
         protected String connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\marco\\Desktop\\IS coisas\\SOMIOD\\SOMIOD\\App_Data\\Database1.mdf\";Integrated Security=True";
         protected string sql = "";
 
-        protected int connect()
+        protected void connect()
         {
             this.conn = null;
-            try
-            {
-                this.conn = new SqlConnection(connectionString);
-                this.conn.Open();
+            this.conn = new SqlConnection(connectionString);
+            this.conn.Open();
+            Console.WriteLine("Connection DONE");
 
-            }
-            catch (Exception ex)
-            {
-                return -1;
-            }
-            return 0;
         }
 
         protected void disconnect()
         {
             conn.Close();
+            Console.WriteLine("DISCONECT");
         }
 
         protected void setSqlComand(string sql)
         {
             this.sql = sql;
+            Console.WriteLine("SQL was DEFINED");
         }
 
-        protected void SelectAbstract() 
+        protected void Select() 
         {
             SqlCommand cmd = new SqlCommand(this.sql, this.conn);
 
@@ -51,21 +46,31 @@ namespace SOMIOD.Controllers
 
         public abstract void readerIterator(SqlDataReader reader);
 
-
-
-        protected void InsertAbstract()
+        protected void Select(int id)
         {
+            SqlCommand cmd = new SqlCommand(this.sql, conn);
+            cmd.Parameters.AddWithValue("@idProd", id);
 
+            SqlDataReader reader = cmd.ExecuteReader();
+            readerIterator(reader);
+            reader.Close();
+            Console.WriteLine("Select DONE");
         }
 
-        protected void UpdateAbstract()
-        {
 
+
+        protected int InsertOrUpdate(SqlCommand cmd)
+        {
+            return cmd.ExecuteNonQuery();
         }
 
-        protected void DeleteAbstract()
-        {
 
+        protected int Delete(int id)
+        {
+            SqlCommand cmd = new SqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@id", id);
+
+            return cmd.ExecuteNonQuery();
         }
     }
 }
