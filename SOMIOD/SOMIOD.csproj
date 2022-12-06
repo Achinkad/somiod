@@ -80,11 +80,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\dbo.SOMIOD.sql" />
     <Content Include="App_Data\SOMIOD.mdf" />
     <Content Include="App_Data\SOMIOD_log.ldf">
       <DependentUpon>SOMIOD.mdf</DependentUpon>
     </Content>
+    <Content Include="App_Data\dbo.SOMIOD.sql" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />
     <Content Include="Web.config" />

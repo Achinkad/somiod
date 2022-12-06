@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SOMIOD.Models;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace SOMIOD.Controllers
         public List<Module> GetModules() {
 
             List<Module> modules = new List<Module>();
-            setSqlComand("SELECT * FROM Module ORDER BY Id");
+            setSqlComand("SELECT * FROM modules ORDER BY Id");
             try
             {
                 connect();
@@ -34,7 +35,10 @@ namespace SOMIOD.Controllers
             {
                 return null;
             }
+
+            //TODO: É necessário converter os objetos para JSON
             return new List<Module>(this.modules);
+            //return JsonSerializer.Serialize(new List<Module>(this.modules));
         }
 
         public Module GetModule(int id)
@@ -71,7 +75,7 @@ namespace SOMIOD.Controllers
                 connect();
                 // id, string mname, DateTime creation_dt, int parent
 
-                string sql = "INSERT INTO Prods VALUES (@Id,@Name,@Creation_date,@Parent)";
+                string sql = "INSERT INTO modules VALUES (@Id,@Name,@Creation_date,@Parent)";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@Id", module.Id);
                 cmd.Parameters.AddWithValue("@Name", module.Name);
@@ -104,7 +108,7 @@ namespace SOMIOD.Controllers
             try
             {
                 connect();
-                string sql = "UPDATE Prods SET Id = @Id, Name = @Name, Creation_date = @Creation_date, Parent = @Parent WHERE id = @id";
+                string sql = "UPDATE modules SET Id = @Id, Name = @Name, Creation_date = @Creation_date, Parent = @Parent WHERE id = @id";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@Id", module.Id);
                 cmd.Parameters.AddWithValue("@Name", module.Name);
@@ -139,7 +143,7 @@ namespace SOMIOD.Controllers
             {
                 connect();
 
-                setSqlComand("DELETE FROM Prods WHERE id = @id");
+                setSqlComand("DELETE FROM modules WHERE id = @id");
                 int numRow = Delete(id);
                 disconnect();
                 if (numRow == 1)
