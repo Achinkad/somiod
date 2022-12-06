@@ -7,16 +7,16 @@ namespace SOMIOD.Models
 {
     public class Data
     {
-        public int id { get; set; }
-        public string content { get; set; }
-        public DateTime creation_dt { get; set; }
-        public int parent { get; set; }
+        public int Id { get; set; }
+        public string Content { get; set; }
+        public DateTime Creation_dt { get; set; }
+        public int Parent { get; set; }
 
         public Data(int id, DateTime creation_dt, int parent)
         {
-            this.id = id;
-            this.creation_dt = creation_dt;
-            this.parent = parent;
+            this.Id = id;
+            this.Creation_dt = creation_dt;
+            this.Parent = parent;
         }
 
 

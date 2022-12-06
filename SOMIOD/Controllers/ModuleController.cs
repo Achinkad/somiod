@@ -5,6 +5,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Web;
+using System.Web.UI.MobileControls;
+using System.Windows.Documents;
 
 namespace SOMIOD.Controllers
 {
@@ -35,7 +37,8 @@ namespace SOMIOD.Controllers
             return new List<Module>(this.modules);
         }
 
-        public override void readerIterator(SqlDataReader reader) {
+        public override void readerIterator(SqlDataReader reader)
+        {
             this.modules = new List<Module>();
             while (reader.Read())
             {

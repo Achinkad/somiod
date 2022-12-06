@@ -13,20 +13,11 @@ namespace SOMIOD.Controllers
         protected String connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\marco\\Desktop\\IS coisas\\SOMIOD\\SOMIOD\\App_Data\\Database1.mdf\";Integrated Security=True";
         protected string sql = "";
 
-        protected int connect()
+        protected void connect()
         {
             this.conn = null;
-            try
-            {
                 this.conn = new SqlConnection(connectionString);
                 this.conn.Open();
-
-            }
-            catch (Exception ex)
-            {
-                return -1;
-            }
-            return 0;
         }
 
         protected void disconnect()

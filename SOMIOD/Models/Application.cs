@@ -8,19 +8,19 @@ namespace SOMIOD.Models
 {
     public class Application
     {
-        public int id { get; set; }
+        public int Id { get; set; }
 
-        public string name { get; set; }
-        public DateTime creation_dt { get; set; }
+        public string Name { get; set; }
+        public DateTime Creation_dt { get; set; }
 
-        private List<Module> modules { get; set; }
+        private List<Module> Modules { get; set; }
 
-        public Application()
+        public Application(int id, string name,DateTime creation_dt)
         {
-            this.id = id;
-            this.name = name;
-            this.creation_dt = creation_dt;
-            this.modules = new List<Module>();
+            this.Id = id;
+            this.Name = name;
+            this.Creation_dt = creation_dt;
+            this.Modules = new List<Module>();
         }
 
     }

@@ -1,23 +1,20 @@
-﻿using System;
+﻿using SOMIOD.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
-using System.Web.Http;
-using System.Xml.Linq;
-using SOMIOD.Models;
 
 namespace SOMIOD.Controllers
 {
-
-    public class ApplicationController : DatabaseConnection
+    public class DataController : DatabaseConnection
     {
         //Select Aplications
-        public IEnumerable<Application> SelectApplications()
+        public IEnumerable<Data> SelectData()
         {
-            List<Application> applications = new List<Application>();
-            setSqlComand("SELECT * FROM Application");
-            
+            List<Data> data_list = new List<Data>();
+            setSqlComand("SELECT * FROM Data");
+
             try
             {
                 connect();
@@ -25,10 +22,10 @@ namespace SOMIOD.Controllers
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Application application = new Application
+                    Data data = new Data
                     {
                         Id = (int)reader["Id"],
-                        Name = (string)reader["Name"],
+                        Parent = (int)reader["Parent"],
                         Creation_dt = (DateTime)reader["Creation_dt"],
                     };
                 }
@@ -41,7 +38,7 @@ namespace SOMIOD.Controllers
                 }
             }
             disconnect();
-            return applications;
+            return data_list;
         }
 
         //Store a new Apllication and their values in the database
@@ -164,4 +161,5 @@ namespace SOMIOD.Controllers
 
         }
     }
+}
 }
