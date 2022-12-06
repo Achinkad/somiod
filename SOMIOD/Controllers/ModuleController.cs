@@ -42,7 +42,7 @@ namespace SOMIOD.Controllers
             try
             {
                 connect();
-                setSqlComand("SELECT * FROM Prods  WHERE Id=@idProd");
+                setSqlComand("SELECT * FROM modules WHERE Id=@id");
                 Select(id);
                 disconnect();
 
@@ -165,7 +165,7 @@ namespace SOMIOD.Controllers
             this.modules = new List<Module>();
             while (reader.Read())
             {
-                Module module = new Module((int)reader["id"], (string)reader["name"], (DateTime)reader["cration_dt"], (int)reader["parent"]);
+                Module module = new Module((int)reader["id"], (string)reader["name"], new DateTime(), (int)reader["parent"]);
 
                 this.modules.Add(module);
             }
