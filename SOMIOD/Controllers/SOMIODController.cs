@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Data.SqlClient;
 using SOMIOD.Models;
 using System.Web.Http.Results;
+using System.Runtime.CompilerServices;
 
 namespace SOMIOD.Controllers
 {
@@ -14,7 +15,18 @@ namespace SOMIOD.Controllers
     {
         // TODO: SQL CONNECTION
 
-        string connectionString = null;
+
+        // GET: api/somiod/{module}/{subscription}
+        [HttpGet, Route("api/somiod/")]
+        public IHttpActionResult GetTest()
+        {
+            ModuleController m = new ModuleController();
+            Module mod = m.GetModule(1);
+            if (mod != null) {
+                return Ok();
+            }
+            return BadRequest("O módulo com o id  não existe");
+        }
 
         // POST: api/somiod/
         [HttpPost, Route("api/somiod/")]
@@ -58,5 +70,6 @@ namespace SOMIOD.Controllers
             return Ok();
         }
 
+       
     }
 }

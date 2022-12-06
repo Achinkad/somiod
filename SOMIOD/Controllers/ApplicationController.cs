@@ -12,8 +12,13 @@ namespace SOMIOD.Controllers
 
     public class ApplicationController : DatabaseConnection
     {
+        private List<Application> applications;
+        public ApplicationController()
+        {
+            this.applications = new List<Application>();   
+        }
         //Select Aplications
-        public IEnumerable<Application> SelectApplications()
+        public List<Application> GetApplications()
         {
             List<Application> applications = new List<Application>();
             setSqlComand("SELECT * FROM Application");
@@ -21,17 +26,9 @@ namespace SOMIOD.Controllers
             try
             {
                 connect();
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    Application application = new Application
-                    {
-                        Id = (int)reader["Id"],
-                        Name = (string)reader["Name"],
-                        Creation_dt = (DateTime)reader["Creation_dt"],
-                    };
-                }
+                Select();
+                disconnect();
+
             }
             catch (Exception)
             {
@@ -41,7 +38,7 @@ namespace SOMIOD.Controllers
                 }
             }
             disconnect();
-            return applications;
+            return new List<Application>(this.applications);
         }
 
         //Store a new Apllication and their values in the database
@@ -57,7 +54,7 @@ namespace SOMIOD.Controllers
                 conn.Open();
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@name", value.Name);
-                cmd.Parameters.AddWithValue("@category", value.Creation_dt);
+                cmd.Parameters.AddWithValue("@creation_dt", value.Creation_dt);
                 int numRegistos = cmd.ExecuteNonQuery();
                 conn.Close();
                 if (numRegistos > 0)
@@ -161,7 +158,16 @@ namespace SOMIOD.Controllers
         }
         public override void readerIterator(SqlDataReader reader)
         {
-
+            while (reader.Read())
+            {
+                Application application = new Application
+                (
+                    (int)reader["Id"],
+                    (string)reader["Name"],
+                    (DateTime)reader["Creation_dt"]
+                );
+                this.applications.Add(application);
+            }
         }
     }
 }
