@@ -13,9 +13,6 @@ namespace SOMIOD.Controllers
 {
     public class SOMIODController : ApiController
     {
-        // TODO: SQL CONNECTION
-
-
         // GET: api/somiod/{module}/{subscription}
         [HttpGet, Route("api/somiod/")]
         public IHttpActionResult GetTest()
@@ -23,9 +20,9 @@ namespace SOMIOD.Controllers
             ModuleController m = new ModuleController();
             Module mod = m.GetModule(1);
             if (mod != null) {
-                return Ok();
+                return Ok(mod);
             }
-            return BadRequest("O módulo com o id  não existe");
+            return BadRequest("O módulo com o id não existe");
         }
 
         // POST: api/somiod/
