@@ -146,9 +146,9 @@ namespace SOMIOD.Controllers
 
         }
         //Delete a application from database
-        public int Delete(int id)
+        public int DeleteApplication(int id)
         {
-            string sql = "DELETE FROM Application WHERE Id=@id";
+            //string sql = "DELETE FROM Application WHERE Id=@id";
             //SqlConnection conn = null;
             try
             {
@@ -157,6 +157,7 @@ namespace SOMIOD.Controllers
                 conn.Open();
                */
                 connect();
+                setSqlComand("DELETE FROM Application WHERE Id=@id");
                 /*
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@idApp", id);
