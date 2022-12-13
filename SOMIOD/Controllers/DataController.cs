@@ -43,26 +43,27 @@ namespace SOMIOD.Controllers
 
         public bool Store(Data value)
         {
-            string sql = "INSERT INTO DATA VALUES(@content,@parent,@creation_dt)";
-            SqlConnection conn = null;
-
             try
             {
-                conn = new SqlConnection(connectionString);
-                conn.Open();
+                connect();
+                // id, string mname, DateTime creation_dt, int parent
+
+                string sql = "INSERT INTO DATA VALUES(@content,@parent,@creation_dt)";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@content", value.Content);
                 cmd.Parameters.AddWithValue("@parent", value.Parent);
                 cmd.Parameters.AddWithValue("@creation_dt", value.Creation_dt);
-                int numRegistos = cmd.ExecuteNonQuery();
-                conn.Close();
-                if (numRegistos > 0)
+                setSqlComand(sql);
+
+                int numRow = InsertOrUpdate(cmd);
+                disconnect();
+                if (numRow == 1)
                 {
                     return true;
                 }
                 return false;
-            }
-            catch (Exception)
+
+            } catch (Exception)
             {
                 if (conn.State == System.Data.ConnectionState.Open)
                     conn.Close();
@@ -71,29 +72,30 @@ namespace SOMIOD.Controllers
         }
 
         //Delete a application from database
-        public int Delete(int id)
+        public Boolean DeleteData(int id)
         {
-            string sql = "DELETE FROM Data WHERE Id=@IdApp";
-            SqlConnection conn = null;
             try
             {
-                conn = new SqlConnection(connectionString);
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@idApp", id);
-                int numRegistos = cmd.ExecuteNonQuery();
-                conn.Close();
-                if (numRegistos == 1)
+                connect();
+
+                setSqlComand("DELETE FROM Data WHERE Id=@IdApp");
+                int numRow = Delete(id);
+                disconnect();
+                if (numRow == 1)
                 {
-                    return 1;
+                    return true;
                 }
-                return -1;
+                return false;
+
             }
             catch (Exception)
             {
+                //fechar ligação à DB
                 if (conn.State == System.Data.ConnectionState.Open)
-                    conn.Close();
-                return -1;
+                {
+                    disconnect();
+                }
+                return false;
             }
         }
         public override void readerIterator(SqlDataReader reader)
@@ -102,12 +104,12 @@ namespace SOMIOD.Controllers
             while (reader.Read())
             {
                 Data data = new Data
-                (
-                    (int)reader["Id"],
-                    (string)reader["Content"],
-                    (int)reader["Parent"],
-                    (DateTime)reader["Creation_dt"],
-                );
+                {
+                    Id = (int)reader["Id"],
+                    Content = (string)reader["Content"],
+                    Parent = (int)reader["Parent"],
+                    Creation_dt =(DateTime)reader["Creation_dt"],
+                };
                 this.data_list.Add(data);
             }
         }
