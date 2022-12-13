@@ -55,8 +55,14 @@ namespace SOMIOD.Controllers
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@name", value.Name);
                 cmd.Parameters.AddWithValue("@creation_dt", value.Creation_dt);
+
+                int numRegistos = InsertOrUpdate(cmd);
+                /*
                 int numRegistos = cmd.ExecuteNonQuery();
+                
                 conn.Close();
+                */
+                disconnect();
                 if (numRegistos > 0)
                 {
                     return true;
@@ -66,7 +72,7 @@ namespace SOMIOD.Controllers
             catch (Exception)
             {
                 if (conn.State == System.Data.ConnectionState.Open)
-                    conn.Close();
+                    disconnect();
                 return false;
             }
         }
@@ -75,16 +81,21 @@ namespace SOMIOD.Controllers
         public int AddModule(int id_app, int id_module)
         {
             string sql = "INSERT INTO Module VALUES (@parent) WHERE id=@IdApp";
-            SqlConnection conn = null;
+            //SqlConnection conn = null;
             try
             {
+                /*
                 conn = new SqlConnection(connectionString);
                 conn.Open();
+                */
+                connect();
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@idApp", id_app);
                 cmd.Parameters.AddWithValue("@parent", id_module);
-                int numRegistos = cmd.ExecuteNonQuery();
-                conn.Close();
+                int numRegistos = InsertOrUpdate(cmd);
+                disconnect();
+              //  int numRegistos = cmd.ExecuteNonQuery();
+               // conn.Close();
                 if (numRegistos == 1)
                 {
                     return 1;
@@ -94,7 +105,8 @@ namespace SOMIOD.Controllers
             catch (Exception)
             {
                 if (conn.State == System.Data.ConnectionState.Open)
-                    conn.Close();
+                    //conn.Close();
+                    disconnect();
                 return -1;
             }
 
@@ -105,7 +117,7 @@ namespace SOMIOD.Controllers
         public int RemoveModule(int id_app, int id_module)
         {
             string sql = "DELETE FROM Modules VALUES (@parent) WHERE id=@IdApp";
-            SqlConnection conn = null;
+            //SqlConnection conn = null;
             try
             {
                 conn = new SqlConnection(connectionString);
@@ -113,8 +125,10 @@ namespace SOMIOD.Controllers
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@idApp", id_app);
                 cmd.Parameters.AddWithValue("@parent", id_module);
-                int numRegistos = cmd.ExecuteNonQuery();
-                conn.Close();
+                int numRegistos = InsertOrUpdate(cmd);
+                //int numRegistos = cmd.ExecuteNonQuery();
+                //conn.Close();
+                disconnect();
                 if (numRegistos == 1)
                 {
                     return 1;
@@ -124,7 +138,8 @@ namespace SOMIOD.Controllers
             catch (Exception)
             {
                 if (conn.State == System.Data.ConnectionState.Open)
-                    conn.Close();
+                    //conn.Close();
+                    disconnect();
                 return -1;
             }
 
@@ -133,16 +148,23 @@ namespace SOMIOD.Controllers
         //Delete a application from database
         public int Delete(int id)
         {
-            string sql = "DELETE FROM Application WHERE Id=@IdApp";
-            SqlConnection conn = null;
+            string sql = "DELETE FROM Application WHERE Id=@id";
+            //SqlConnection conn = null;
             try
             {
+                /*
                 conn = new SqlConnection(connectionString);
                 conn.Open();
+               */
+                connect();
+                /*
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@idApp", id);
                 int numRegistos = cmd.ExecuteNonQuery();
-                conn.Close();
+                */
+                int numRegistos = Delete(id);
+                //conn.Close();
+                disconnect();
                 if (numRegistos == 1)
                 {
                     return 1;
@@ -152,7 +174,8 @@ namespace SOMIOD.Controllers
             catch (Exception)
             {
                 if (conn.State == System.Data.ConnectionState.Open)
-                    conn.Close();
+                    //conn.Close();
+                    disconnect();
                 return -1;
             }
         }
@@ -161,11 +184,11 @@ namespace SOMIOD.Controllers
             while (reader.Read())
             {
                 Application application = new Application
-                (
-                    (int)reader["Id"],
-                    (string)reader["Name"],
-                    (DateTime)reader["Creation_dt"]
-                );
+                {
+                    Id = (int)reader["Id"],
+                    Name = (string)reader["Name"],
+                    Creation_dt = (DateTime)reader["Creation_dt"],
+                };
                 this.applications.Add(application);
             }
         }
