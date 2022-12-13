@@ -62,7 +62,7 @@ namespace SOMIOD.Controllers
             }
         }
 
-        public int PostSubcriptio(Subscription subscription)
+        public bool Store(Subscription subscription)
         {
             try
             {
@@ -83,9 +83,9 @@ namespace SOMIOD.Controllers
                 disconnect();
                 if (numRow == 1)
                 {
-                    return numRow;
+                    return true;
                 }
-                return -1;
+                return false;
 
             }
             catch (Exception)
@@ -95,7 +95,7 @@ namespace SOMIOD.Controllers
                 {
                     disconnect();
                 }
-                return -1;
+                return false;
             }
         }
 

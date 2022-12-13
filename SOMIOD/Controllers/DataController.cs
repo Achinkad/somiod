@@ -41,7 +41,7 @@ namespace SOMIOD.Controllers
 
         //Store a new Data and their values in the database
 
-        public int Store(Data value)
+        public bool Store(Data value)
         {
             string sql = "INSERT INTO DATA VALUES(@content,@parent,@creation_dt)";
             SqlConnection conn = null;
@@ -58,15 +58,15 @@ namespace SOMIOD.Controllers
                 conn.Close();
                 if (numRegistos > 0)
                 {
-                    return 1;
+                    return true;
                 }
-                return -1;
+                return false;
             }
             catch (Exception)
             {
                 if (conn.State == System.Data.ConnectionState.Open)
                     conn.Close();
-                return -1;
+                return false;
             }
         }
 

@@ -29,13 +29,10 @@ namespace SOMIOD.Controllers
         [HttpPost, Route("api/somiod/")]
         public IHttpActionResult PostApplication([FromBody] Application value)
         {           
-            if (value != null)
+            if (value != null && value.Res_type == "application")
             {
-                // -> Creates Application + Stores
-                Application application = new Application();
-
-                bool response = application.Store(value.name, value.creation_dt);
-                 
+                ApplicationController app = new ApplicationController();
+                bool response = app.Store(value);                 
                 if (!response) return InternalServerError();
                 return Ok();
             }
@@ -43,25 +40,46 @@ namespace SOMIOD.Controllers
             return BadRequest();
         }
 
-        // POST: api/somiod/{module}
+        // POST: api/somiod/{module} -> Stores a new Module
         [HttpPost, Route("api/somiod/{module}")]
-        public IHttpActionResult PostModule([FromBody] string value)
+        public IHttpActionResult PostModule([FromBody] Module value)
         {
-            return Ok();
+            if (value != null && value.Res_type == "module")
+            {
+                ModuleController module = new ModuleController();
+                bool response = module.Store(value);
+                if (!response) return InternalServerError();
+                return Ok();
+            }
+            return BadRequest();
         }
 
-        // POST: api/somiod/{module}/{data}
+        // POST: api/somiod/{module}/{data} -> Stores a new Data
         [HttpPost, Route("api/somiod/{module}/{data}")]
-        public IHttpActionResult PostData([FromBody] string value)
+        public IHttpActionResult PostData([FromBody] Data value)
         {
-            return Ok();
+            if (value != null && value.Res_type == "data")
+            {
+                DataController data = new DataController();
+                bool response = data.Store(value);
+                if (!response) return InternalServerError();
+                return Ok();
+            }
+            return BadRequest();
         }
 
-        // POST: api/somiod/{module}/{subscription}
+        // POST: api/somiod/{module}/{subscription} -> Stores a new Subscription
         [HttpPost, Route("api/somiod/{module}/{subscription}")]
-        public IHttpActionResult PostSubscription([FromBody] string value)
+        public IHttpActionResult PostSubscription([FromBody] Subscription value)
         {
-            return Ok();
+            if (value != null && value.Res_type == "subscription")
+            {
+                SubscriptionController subscription = new SubscriptionController();
+                bool response = subscription.Store(value);
+                if (!response) return InternalServerError();
+                return Ok();
+            }
+            return BadRequest();
         }
 
        
