@@ -69,7 +69,7 @@ namespace SOMIOD.Controllers
             }
         }
 
-        public int PostModule(Module module) {
+        public bool Store(Module module) {
             try
             {
                 connect();
@@ -87,9 +87,9 @@ namespace SOMIOD.Controllers
                 disconnect();
                 if (numRow == 1)
                 {
-                    return numRow;
+                    return true;
                 }
-                return -1;
+                return false;
 
             }
             catch (Exception)
@@ -99,7 +99,7 @@ namespace SOMIOD.Controllers
                 {
                     disconnect();
                 }
-                return -1;
+                return false;
             }
         }
 

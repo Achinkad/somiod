@@ -12,10 +12,12 @@ namespace SOMIOD.Controllers
     public class ApplicationController : DatabaseConnection
     {
         private List<Application> applications;
+
         public ApplicationController()
         {
             this.applications = new List<Application>();   
         }
+        
         //Select Aplications
         public List<Application> GetApplications()
         {
@@ -41,8 +43,7 @@ namespace SOMIOD.Controllers
         }
 
         //Store a new Apllication and their values in the database
-
-        public int Store(Application value)
+        public bool Store(Application value)
         {
             string sql = "INSERT INTO Application VALUES(@name,@creation_dt)";
             SqlConnection conn = null;
@@ -64,16 +65,15 @@ namespace SOMIOD.Controllers
                 disconnect();
                 if (numRegistos > 0)
                 {
-                    return 1;
+                    return true;
                 }
-                return -1;
-            
-                }
+                return false;
+            }
             catch (Exception)
             {
                 if (conn.State == System.Data.ConnectionState.Open)
                     disconnect();
-                return -1;
+                return false;
             }
         }
 
