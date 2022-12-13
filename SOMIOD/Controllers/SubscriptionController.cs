@@ -10,28 +10,31 @@ namespace SOMIOD.Controllers
     public class SubscriptionController : DatabaseConnection
     {
         private List<Subscription> subscriptions;
+        private List<string> valid_events = new List<string>() { "creation", "deletion" };
 
         public SubscriptionController()
         {
-            this.subscriptions = new List<Subscription>();
+            subscriptions = new List<Subscription>();
         }
+
         public List<Subscription> GetModules()
         {
-
             List<Module> modules = new List<Module>();
+
             setSqlComand("SELECT * FROM Subscription ORDER BY Id");
+            
             try
             {
                 connect();
                 Select();
                 disconnect();
-
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
-            return new List<Subscription>(this.subscriptions);
+
+            return new List<Subscription>(subscriptions);
         }
 
         public Subscription GetSubcription(int id)
@@ -39,138 +42,121 @@ namespace SOMIOD.Controllers
             try
             {
                 connect();
-                setSqlComand("SELECT * FROM Subscription  WHERE Id=@idProd");
+                setSqlComand("SELECT * FROM Subscription WHERE Id=@idProd");
                 Select(id);
                 disconnect();
-
-                if (this.subscriptions[0] == null)
-                {
-                    return null;
-                }
-                return this.subscriptions[0];
+                return subscriptions?[0] ?? null;
 
             }
             catch (Exception)
             {
-                //fechar ligação à DB
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    disconnect();
-                }
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
                 return null;
-                //return BadRequest();
             }
         }
 
         public bool Store(Subscription subscription)
         {
+            // Check if Module Parent exists
+            ModuleController module = new ModuleController();
+            if (module.GetModule(subscription.Parent) == null) return false;
+
+            // Check if Event String is "Creation" or "Deletion"
+            if (valid_events.Any(s => s.Contains(subscription.Event))) return false;
+
             try
             {
                 connect();
-                // id, string mname, DateTime creation_dt, int parent
-
-                string sql = "INSERT INTO Prods VALUES (@Id,@Name,@Creation_date,@Parent,@Event,@Endpoint)";
+                
+                string sql = "INSERT INTO subscriptions VALUES (@Name, @Creation_date, @Parent, @Event, @Endpoint)";
+               
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@Id", subscription.Id);
+                
                 cmd.Parameters.AddWithValue("@Name", subscription.Name);
                 cmd.Parameters.AddWithValue("@Creation_dt", subscription.Creation_dt);
                 cmd.Parameters.AddWithValue("@Parent", subscription.Parent);
                 cmd.Parameters.AddWithValue("@Event", subscription.Event);
                 cmd.Parameters.AddWithValue("@Endpoint", subscription.Endpoint);
+                
                 setSqlComand(sql);
 
                 int numRow = InsertOrUpdate(cmd);
+                
                 disconnect();
-                if (numRow == 1)
-                {
-                    return true;
-                }
-                return false;
 
+                return numRow == 1 ? true : false;
             }
             catch (Exception)
             {
-                //fechar ligação à DB
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    disconnect();
-                }
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
                 return false;
             }
         }
 
-        public int UpdateSubcriptio(Subscription subscription)
+        public bool UpdateSubcription(Subscription subscription)
         {
+            // Check if Module Parent exists
+            ModuleController module = new ModuleController();
+            if (module.GetModule(subscription.Parent) == null) return false;
+
+            // Check if Event String is "Creation" or "Deletion"
+            if (valid_events.Any(s => s.Contains(subscription.Event))) return false;
+
             try
             {
                 connect();
-                string sql = "UPDATE Prods SET Id = @Id, Name = @Name, Creation_date = @Creation_date, Parent = @Parent, Event = @Event, Endpoint = @Endpoint  WHERE id = @id";
+                
+                string sql = "UPDATE subscriptions SET Name = @Name, Creation_date = @Creation_date, Parent = @Parent, Event = @Event, Endpoint = @Endpoint  WHERE id = @id";
+                
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@Id", subscription.Id);
+                
+                cmd.Parameters.AddWithValue("@id", subscription.Id);
                 cmd.Parameters.AddWithValue("@Name", subscription.Name);
                 cmd.Parameters.AddWithValue("@Creation_dt", subscription.Creation_dt);
                 cmd.Parameters.AddWithValue("@Parent", subscription.Parent);
                 cmd.Parameters.AddWithValue("@Event", subscription.Event);
                 cmd.Parameters.AddWithValue("@Endpoint", subscription.Endpoint);
+                
                 setSqlComand(sql);
 
                 int numRow = InsertOrUpdate(cmd);
 
                 disconnect();
-                if (numRow == 1)
-                {
-                    return numRow;
-                }
-                return -1;
+
+                return numRow == 1 ? true : false;
 
             }
             catch (Exception)
             {
-                //fechar ligação à DB
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    disconnect();
-                }
-
-                return -1;
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                return false;
             }
         }
 
-        public int DeleteSubcriptio(int id)
+        public bool DeleteSubcription(int id)
         {
             try
             {
                 connect();
-
                 setSqlComand("DELETE FROM Subscription WHERE id = @id");
                 int numRow = Delete(id);
                 disconnect();
-                if (numRow == 1)
-                {
-                    return 1;
-                }
-                return -1;
-
+                return numRow == 1 ? true : false;
             }
             catch (Exception)
             {
-                //fechar ligação à DB
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    disconnect();
-                }
-                return -1;
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                return false;
             }
         }
 
         public override void readerIterator(SqlDataReader reader)
         {
-            this.subscriptions = new List<Subscription>();
+            subscriptions = new List<Subscription>();
             while (reader.Read())
             {
                 Subscription subscription = null;
-
-                this.subscriptions.Add(subscription);
+                subscriptions.Add(subscription);
             }
         }
     }

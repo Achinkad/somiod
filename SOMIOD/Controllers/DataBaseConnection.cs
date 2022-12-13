@@ -57,13 +57,10 @@ namespace SOMIOD.Controllers
             Console.WriteLine("Select DONE");
         }
 
-
-
         protected int InsertOrUpdate(SqlCommand cmd)
         {
             return cmd.ExecuteNonQuery();
         }
-
 
         protected int Delete(int id)
         {
