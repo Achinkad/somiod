@@ -9,7 +9,6 @@ using SOMIOD.Models;
 
 namespace SOMIOD.Controllers
 {
-
     public class ApplicationController : DatabaseConnection
     {
         private List<Application> applications;

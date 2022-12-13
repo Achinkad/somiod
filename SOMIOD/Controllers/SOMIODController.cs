@@ -25,21 +25,18 @@ namespace SOMIOD.Controllers
             return BadRequest("O módulo com o id não existe");
         }
 
-        // POST: api/somiod/
+        // POST: api/somiod/ -> Stores a new Application
         [HttpPost, Route("api/somiod/")]
         public IHttpActionResult PostApplication([FromBody] Application value)
-        {
-            /* --- Store a new Application --- */
-
+        {           
             if (value != null)
             {
                 // -> Creates Application + Stores
                 Application application = new Application();
 
-                // bool response = application.store(value.name, value.creation_dt);
+                bool response = application.Store(value.name, value.creation_dt);
                  
-                // if (!response) return InternalServerError();
-
+                if (!response) return InternalServerError();
                 return Ok();
             }
 

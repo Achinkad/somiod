@@ -5,8 +5,8 @@ using System.Web;
 
 namespace SOMIOD.Models
 {
-    public class Middleware
+    public class RequestType
     {
-        private List<Application> apps { get; set; }
+        public string Res_type { get; set; }
     }
 }
