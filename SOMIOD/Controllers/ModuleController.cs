@@ -168,7 +168,13 @@ namespace SOMIOD.Controllers
             this.modules = new List<Module>();
             while (reader.Read())
             {
-                Module module = new Module((int)reader["id"], (string)reader["name"], new DateTime(), (int)reader["parent"]);
+                Module module = new Module
+                {
+                    Id=(int)reader["id"],
+                    Name=(string)reader["name"],
+                    Creation_dt = new DateTime(),
+                    Parent = (int)reader["parent"],
+                    };
 
                 this.modules.Add(module);
             }
