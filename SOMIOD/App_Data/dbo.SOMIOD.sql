@@ -1,9 +1,9 @@
 ﻿DROP TABLE subscriptions,data,modules,applications;
 CREATE TABLE [dbo].[applications] (
-    [Id]           INT           NOT NULL,
-    [name]         NVARCHAR (50) NULL,
-    [creationd_dt] DATETIME2 (7) NULL,
-    PRIMARY KEY CLUSTERED ([Id] ASC) 
+    [Id]           INT         IDENTITY,
+    [name]         NVARCHAR (50) NULL UNIQUE,
+    [creation_dt] DATETIME2 (7) NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 CREATE TABLE [dbo].[modules] (
     [Id]          INT           NOT NULL,

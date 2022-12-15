@@ -33,8 +33,8 @@ namespace SOMIOD.Controllers
             {
                 ApplicationController app = new ApplicationController();
                 bool response = app.Store(value);                 
-                if (!response) return InternalServerError();
-                return Ok();
+                if (!response) return BadRequest("Operation Failed");//Local do erro
+                return Ok(response);
             }
 
             return BadRequest();

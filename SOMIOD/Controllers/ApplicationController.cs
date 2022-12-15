@@ -42,31 +42,56 @@ namespace SOMIOD.Controllers
             return new List<Application>(this.applications);
         }
 
+        public Application GetApplication(int id)
+        {
+            try
+            {
+                connect();
+                setSqlComand("SELECT * FROM applications WHERE Id=@id");
+                Select(id);
+                disconnect();
+
+                if (this.applications[0] == null)
+                {
+                    return null;
+                }
+                return this.applications[0];
+
+            }
+            catch (Exception)
+            {
+                //fechar ligação à DB
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    disconnect();
+                }
+                return null;
+                //return BadRequest();
+            }
+        }
+
+       
         //Store a new Apllication and their values in the database
         public bool Store(Application value)
         {
-            string sql = "INSERT INTO Application VALUES(@name,@creation_dt)";
-            SqlConnection conn = null;
+            string sql = "INSERT INTO applications VALUES(@Name,@Creation_dt)";
 
             try
             {
-                conn = new SqlConnection(connectionString);
-                conn.Open();
+                connect();
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@name", value.Name);
-                cmd.Parameters.AddWithValue("@creation_dt", value.Creation_dt);
+                //cmd.Parameters.AddWithValue("@Id", value.Id);
+                cmd.Parameters.AddWithValue("@Name", value.Name);
+                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
 
                 int numRegistos = InsertOrUpdate(cmd);
-                /*
-                int numRegistos = cmd.ExecuteNonQuery();
                 
-                conn.Close();
-                */
-                disconnect();
                 if (numRegistos > 0)
                 {
+                    disconnect();
                     return true;
                 }
+                disconnect();
                 return false;
             }
             catch (Exception)

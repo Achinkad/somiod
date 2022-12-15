@@ -73,7 +73,7 @@ namespace SOMIOD.Controllers
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 
                 cmd.Parameters.AddWithValue("@Name", subscription.Name);
-                cmd.Parameters.AddWithValue("@Creation_dt", subscription.Creation_dt);
+                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now.ToString("yyyy-mm-dd HH:mm:ss"));
                 cmd.Parameters.AddWithValue("@Parent", subscription.Parent);
                 cmd.Parameters.AddWithValue("@Event", subscription.Event);
                 cmd.Parameters.AddWithValue("@Endpoint", subscription.Endpoint);

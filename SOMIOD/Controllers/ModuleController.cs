@@ -79,7 +79,7 @@ namespace SOMIOD.Controllers
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@Id", module.Id);
                 cmd.Parameters.AddWithValue("@Name", module.Name);
-                cmd.Parameters.AddWithValue("@Creation_dt", module.Creation_dt);
+                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now.ToString("yyyy-mm-dd HH:mm:ss"));
                 cmd.Parameters.AddWithValue("@Parent", module.Parent);
                 setSqlComand(sql);
 
@@ -174,7 +174,7 @@ namespace SOMIOD.Controllers
                     Name=(string)reader["name"],
                     Creation_dt = new DateTime(),
                     Parent = (int)reader["parent"],
-                    };
+                };
 
                 this.modules.Add(module);
             }
