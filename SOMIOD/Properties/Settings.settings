@@ -5,9 +5,15 @@
     <Setting Name="ConnStr" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+<<<<<<< HEAD
   &lt;ConnectionString&gt;Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Bruno\Desktop\ESCOLA\DOCS\2022_2023\IS\pratica\projeto_grupo\SOMIOD\SOMIOD\App_Data\Database1.mdf;Integrated Security=True&lt;/ConnectionString&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Bruno\Desktop\ESCOLA\DOCS\2022_2023\IS\pratica\projeto_grupo\SOMIOD\SOMIOD\App_Data\Database1.mdf;Integrated Security=True</Value>
+=======
+  &lt;ConnectionString&gt;Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=E:\ProjetoISSOMIOD\SOMIOD\SOMIOD\App_Data\SOMIOD.mdf;Integrated Security=True&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=E:\ProjetoISSOMIOD\SOMIOD\SOMIOD\App_Data\SOMIOD.mdf;Integrated Security=True</Value>
+>>>>>>> 22b80bde7c139bfa106588243fa4df8cc57f3ecc
     </Setting>
   </Settings>
 </SettingsFile>

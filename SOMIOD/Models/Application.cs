@@ -6,22 +6,11 @@ using System.Web;
 
 namespace SOMIOD.Models
 {
-    public class Application
+    public class Application : RequestType
     {
-        public int id { get; set; }
-
-        public string name { get; set; }
-        public DateTime creation_dt { get; set; }
-
-        private List<Module> modules { get; set; }
-
-        public Application()
-        {
-            this.id = id;
-            this.name = name;
-            this.creation_dt = creation_dt;
-            this.modules = new List<Module>();
-        }
-
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public DateTime Creation_dt { get; set; }
+        private List<Module> Modules { get; set; }
     }
 }

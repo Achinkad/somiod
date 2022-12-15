@@ -10,7 +10,7 @@ namespace SOMIOD.Controllers
     public abstract class DatabaseConnection
     {
         protected SqlConnection conn;
-        protected String connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=\"C:\\Users\\marco\\Desktop\\IS coisas\\SOMIOD\\SOMIOD\\App_Data\\Database1.mdf\";Integrated Security=True";
+        protected String connectionString = Properties.Settings.Default.ConnStr;
         protected string sql = "";
 
         protected void connect()
@@ -49,7 +49,7 @@ namespace SOMIOD.Controllers
         protected void Select(int id)
         {
             SqlCommand cmd = new SqlCommand(this.sql, conn);
-            cmd.Parameters.AddWithValue("@idProd", id);
+            cmd.Parameters.AddWithValue("@id", id);
 
             SqlDataReader reader = cmd.ExecuteReader();
             readerIterator(reader);
@@ -57,13 +57,10 @@ namespace SOMIOD.Controllers
             Console.WriteLine("Select DONE");
         }
 
-
-
         protected int InsertOrUpdate(SqlCommand cmd)
         {
             return cmd.ExecuteNonQuery();
         }
-
 
         protected int Delete(int id)
         {

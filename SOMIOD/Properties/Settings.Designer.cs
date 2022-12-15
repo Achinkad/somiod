@@ -12,7 +12,11 @@ namespace SOMIOD.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+<<<<<<< HEAD
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.3.0.0")]
+=======
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
+>>>>>>> 22b80bde7c139bfa106588243fa4df8cc57f3ecc
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -26,9 +30,14 @@ namespace SOMIOD.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+<<<<<<< HEAD
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Bruno\\Desktop\\ESCOL" +
             "A\\DOCS\\2022_2023\\IS\\pratica\\projeto_grupo\\SOMIOD\\SOMIOD\\App_Data\\Database1.mdf;I" +
             "ntegrated Security=True")]
+=======
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\marco\\Desktop\\SOMIOD" +
+            "\\SOMIOD\\App_Data\\SOMIOD.mdf;Integrated Security=True")]
+>>>>>>> 22b80bde7c139bfa106588243fa4df8cc57f3ecc
         public string ConnStr {
             get {
                 return ((string)(this["ConnStr"]));
