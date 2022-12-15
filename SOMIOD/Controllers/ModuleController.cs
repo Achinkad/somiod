@@ -172,7 +172,7 @@ namespace SOMIOD.Controllers
                 {
                     Id=(int)reader["id"],
                     Name=(string)reader["name"],
-                    Creation_dt = new DateTime(),
+                    Creation_dt = new DateTime(),//TODO: verificar data
                     Parent = (int)reader["parent"],
                 };
 
