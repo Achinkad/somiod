@@ -70,7 +70,25 @@ namespace SOMIOD.Controllers
             }
         }
 
-       
+        public bool GetApplicationByName(string name)
+        {
+            try
+            {
+                connect();
+                setSqlComand("SELECT * FROM applications WHERE name=@name");
+                SelectByName(name);
+                disconnect();
+
+                return this.applications[0] != null ? true : false;
+            }
+            catch (Exception)
+            {
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                return false;
+            }
+        }
+
+
         //Store a new Apllication and their values in the database
         public bool Store(Application value)
         {
@@ -170,41 +188,28 @@ namespace SOMIOD.Controllers
 
 
         }
-        //Delete a application from database
-        public int DeleteApplication(int id)
+
+        //Delete an application from database
+        public bool DeleteApplication(int id)
         {
-            //string sql = "DELETE FROM Application WHERE Id=@id";
-            //SqlConnection conn = null;
             try
             {
-                /*
-                conn = new SqlConnection(connectionString);
-                conn.Open();
-               */
                 connect();
                 setSqlComand("DELETE FROM Application WHERE Id=@id");
-                /*
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@idApp", id);
-                int numRegistos = cmd.ExecuteNonQuery();
-                */
+
                 int numRegistos = Delete(id);
-                //conn.Close();
+                
                 disconnect();
-                if (numRegistos == 1)
-                {
-                    return 1;
-                }
-                return -1;
+
+                return numRegistos == 1 ? true : false;
             }
             catch (Exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open)
-                    //conn.Close();
-                    disconnect();
-                return -1;
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                return false;
             }
         }
+
         public override void readerIterator(SqlDataReader reader)
         {
             while (reader.Read())

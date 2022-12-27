@@ -57,6 +57,17 @@ namespace SOMIOD.Controllers
             Console.WriteLine("Select DONE");
         }
 
+        protected void SelectByName(string name)
+        {
+            SqlCommand cmd = new SqlCommand(this.sql, conn);
+            cmd.Parameters.AddWithValue("@name", name);
+
+            SqlDataReader reader = cmd.ExecuteReader();
+            readerIterator(reader);
+            reader.Close();
+            Console.WriteLine("Select DONE");
+        }
+
         protected int InsertOrUpdate(SqlCommand cmd)
         {
             return cmd.ExecuteNonQuery();

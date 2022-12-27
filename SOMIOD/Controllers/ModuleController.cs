@@ -138,29 +138,20 @@ namespace SOMIOD.Controllers
             }
         }
 
-        public int DeleteModule(int id) {
+        public bool DeleteModule(int id) {
             try
             {
                 connect();
-
                 setSqlComand("DELETE FROM modules WHERE id = @id");
                 int numRow = Delete(id);
                 disconnect();
-                if (numRow == 1)
-                {
-                    return 1;
-                }
-                return -1;
 
+                return numRow == 1 ? true : false;
             }
             catch (Exception)
             {
-                //fechar ligação à DB
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    disconnect();
-                }
-                return -1;
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                return false;
             }
         }
 

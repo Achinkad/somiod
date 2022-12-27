@@ -105,7 +105,7 @@ namespace SOMIOD.Controllers
             try
             {
                 ApplicationController app = new ApplicationController();
-                bool response = app.DeleteApplication(value.Id); //FIXME: Change DeleteApplication return type
+                bool response = app.DeleteApplication(value.Id);
                 if (!response) return BadRequest("Operation Failed");
                 return Ok(response);
             }
@@ -163,7 +163,7 @@ namespace SOMIOD.Controllers
             if (value.Res_type != "module") return BadRequest("Request type is different from 'module'.");
 
             ApplicationController application = new ApplicationController();
-            if (application.GetApplicationByName(application_name)) return BadRequest("The application does not exist."); //TODO: Create this method in ApplicationController
+            if (application.GetApplicationByName(application_name)) return BadRequest("The application does not exist.");
 
             try
             {
@@ -188,7 +188,7 @@ namespace SOMIOD.Controllers
             try
             {
                 ModuleController module = new ModuleController();
-                bool response = module.PutApplication(value); //TODO: Add this method to ModuleController
+                bool response = module.PutModule(value); //TODO: Add this method to ModuleController
                 if (!response) return BadRequest("Operation Failed");
                 return Ok(response);
             }
@@ -208,7 +208,7 @@ namespace SOMIOD.Controllers
             try
             {
                 ModuleController module = new ModuleController();
-                bool response = module.DeleteModule(value.Id); //FIXME: Change DeleteModule return type
+                bool response = module.DeleteModule(value.Id);
                 if (!response) return BadRequest("Operation Failed");
                 return Ok(response);
             }
