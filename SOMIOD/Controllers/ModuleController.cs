@@ -103,7 +103,7 @@ namespace SOMIOD.Controllers
             }
         }
 
-        public int UpdateModule(Module module)
+        public bool UpdateModule(Module module)
         {
             try
             {
@@ -119,22 +119,12 @@ namespace SOMIOD.Controllers
                 int numRow = InsertOrUpdate(cmd);
 
                 disconnect();
-                if (numRow == 1)
-                {
-                    return numRow;
-                }
-                return -1;
-
+                return numRow == 1;
             }
             catch (Exception)
             {
-                //fechar ligação à DB
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    disconnect();
-                }
-
-                return -1;
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                return false;
             }
         }
 
@@ -146,7 +136,7 @@ namespace SOMIOD.Controllers
                 int numRow = Delete(id);
                 disconnect();
 
-                return numRow == 1 ? true : false;
+                return numRow == 1;
             }
             catch (Exception)
             {

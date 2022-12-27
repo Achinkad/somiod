@@ -85,7 +85,7 @@ namespace SOMIOD.Controllers
             try
             {
                 ApplicationController app = new ApplicationController();
-                bool response = app.PutApplication(value); //TODO: Add this method to ApplicationController
+                bool response = app.Update(value);
                 if (!response) return BadRequest("Operation Failed");
                 return Ok(response);
             }
@@ -188,7 +188,7 @@ namespace SOMIOD.Controllers
             try
             {
                 ModuleController module = new ModuleController();
-                bool response = module.PutModule(value); //TODO: Add this method to ModuleController
+                bool response = module.UpdateModule(value);
                 if (!response) return BadRequest("Operation Failed");
                 return Ok(response);
             }

@@ -120,6 +120,30 @@ namespace SOMIOD.Controllers
             }
         }
 
+        public bool Update(Application value)
+        {
+            string update_query = "UPDATE applications SET name = @name, creation_dt = @creation_dt WHERE @id = id";
+
+            try
+            {
+                connect();
+
+                SqlCommand cmd = new SqlCommand(update_query, conn);
+                cmd.Parameters.AddWithValue("@name", value.Name);
+                cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now);
+                int rows = InsertOrUpdate(cmd);
+
+                disconnect();
+
+                return rows > 0;
+            }
+            catch (Exception)
+            {
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                return false;
+            }
+        }
+
         //Add a reference to an Application in the Module database table
         public int AddModule(int id_app, int id_module)
         {
@@ -201,7 +225,7 @@ namespace SOMIOD.Controllers
                 
                 disconnect();
 
-                return numRegistos == 1 ? true : false;
+                return numRegistos == 1;
             }
             catch (Exception)
             {
