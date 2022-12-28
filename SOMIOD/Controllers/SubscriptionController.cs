@@ -21,13 +21,13 @@ namespace SOMIOD.Controllers
         {
             List<Module> modules = new List<Module>();
 
-            setSqlComand("SELECT * FROM Subscription ORDER BY Id");
+            SetSqlComand("SELECT * FROM Subscription ORDER BY Id");
             
             try
             {
-                connect();
+                Connect();
                 Select();
-                disconnect();
+                Disconnect();
             }
             catch (Exception)
             {
@@ -41,16 +41,16 @@ namespace SOMIOD.Controllers
         {
             try
             {
-                connect();
-                setSqlComand("SELECT * FROM Subscription WHERE Id=@idProd");
+                Connect();
+                SetSqlComand("SELECT * FROM Subscription WHERE Id=@idProd");
                 Select(id);
-                disconnect();
+                Disconnect();
                 return subscriptions?[0] ?? null;
 
             }
             catch (Exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
                 return null;
             }
         }
@@ -62,7 +62,7 @@ namespace SOMIOD.Controllers
 
             try
             {
-                connect();
+                Connect();
 
                 string sql = "INSERT INTO subscriptions VALUES (@Name, @Creation_dt, @Event, @Endpoint, @Parent)";
 
@@ -74,17 +74,17 @@ namespace SOMIOD.Controllers
                 cmd.Parameters.AddWithValue("@Event", subscription.Event);
                 cmd.Parameters.AddWithValue("@Endpoint", subscription.Endpoint);
                 
-                setSqlComand(sql);
+                SetSqlComand(sql);
 
                 int numRow = InsertOrUpdate(cmd);
                 
-                disconnect();
+                Disconnect();
 
                 return numRow == 1;
             }
             catch (Exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
                 return false;
             }
         }
@@ -96,7 +96,7 @@ namespace SOMIOD.Controllers
 
             try
             {
-                connect();
+                Connect();
                 
                 string sql = "UPDATE subscriptions SET Name = @Name, Creation_date = @Creation_date, Parent = @Parent, Event = @Event, Endpoint = @Endpoint  WHERE id = @id";
                 
@@ -109,18 +109,18 @@ namespace SOMIOD.Controllers
                 cmd.Parameters.AddWithValue("@Event", subscription.Event);
                 cmd.Parameters.AddWithValue("@Endpoint", subscription.Endpoint);
                 
-                setSqlComand(sql);
+                SetSqlComand(sql);
 
                 int numRow = InsertOrUpdate(cmd);
 
-                disconnect();
+                Disconnect();
 
                 return numRow == 1 ? true : false;
 
             }
             catch (Exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
                 return false;
             }
         }
@@ -129,20 +129,20 @@ namespace SOMIOD.Controllers
         {
             try
             {
-                connect();
-                setSqlComand("DELETE FROM Subscription WHERE id = @id");
+                Connect();
+                SetSqlComand("DELETE FROM Subscription WHERE id = @id");
                 int numRow = Delete(id);
-                disconnect();
+                Disconnect();
                 return numRow == 1 ? true : false;
             }
             catch (Exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
                 return false;
             }
         }
 
-        public override void readerIterator(SqlDataReader reader)
+        public override void ReaderIterator(SqlDataReader reader)
         {
             subscriptions = new List<Subscription>();
             while (reader.Read())
