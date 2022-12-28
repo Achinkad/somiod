@@ -63,9 +63,9 @@ namespace SOMIOD.Controllers
             try
             {
                 connect();
-                
+
                 string sql = "INSERT INTO subscriptions VALUES (@Name, @Creation_dt, @Parent, @Event, @Endpoint)";
-               
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 
                 cmd.Parameters.AddWithValue("@Name", subscription.Name);

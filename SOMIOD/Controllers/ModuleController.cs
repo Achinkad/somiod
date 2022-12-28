@@ -103,7 +103,7 @@ namespace SOMIOD.Controllers
                 setSqlComand(sql);
 
                 int numRow = InsertOrUpdate(cmd);
-
+                
                 disconnect();
 
                 return numRow == 1;
@@ -120,20 +120,20 @@ namespace SOMIOD.Controllers
             try
             {
                 connect();
-                string sql = "UPDATE modules SET name = @Name, creation_dt = @Creation_dt WHERE id = @id";
+               
+                string sql = "UPDATE modules SET name = @Name, creation_dt = @Creation_dt WHERE id = @id"; 
                 
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@id", id);
                 cmd.Parameters.AddWithValue("@Name", module.Name);
                 cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
-
+               
                 setSqlComand(sql);
 
                 int numRow = InsertOrUpdate(cmd);
 
                 disconnect();
-
                 return numRow == 1;
             }
             catch (Exception)

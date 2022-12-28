@@ -19,7 +19,7 @@ namespace SOMIOD.Controllers
         public List<Data> GetData()
         {
             List<Data> data_list = new List<Data>();
-            setSqlComand("SELECT * FROM Data");
+            setSqlComand("SELECT * FROM data");
 
             try
             {
@@ -39,6 +39,34 @@ namespace SOMIOD.Controllers
             return new List<Data>(this.data_list);
         }
 
+        public Data GetData(int id)
+        {
+            try {
+
+                connect();
+                setSqlComand("SELECT * FROM data WHERE Id=@id");
+                Select(id);
+                disconnect();
+
+                if (this.data_list[0] == null)
+                {
+                    return null;
+                }
+                return this.data_list[0];
+
+            }
+            catch (Exception)
+            {
+                //fechar ligação à DB
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    disconnect();
+                }
+                return null;
+                //return BadRequest();
+            }
+        }
+
         //Store a new Data and their values in the database
 
         public bool Store(Data value, int parent_id)
@@ -46,22 +74,20 @@ namespace SOMIOD.Controllers
             try
             {
                 connect();
-                
-                string sql = "INSERT INTO data VALUES(@content, @parent, @creation_dt)";
+
+                string sql = "INSERT INTO data VALUES(@Content, @Parent, @Creation_dt)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
-
-                cmd.Parameters.AddWithValue("@content", value.Content);
-                cmd.Parameters.AddWithValue("@parent", parent_id);
-                cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now);
-                setSqlComand(sql);
+                
+                cmd.Parameters.AddWithValue("@Content", value.Content);
+                cmd.Parameters.AddWithValue("@Parent", parent_id);
+                cmd.Parameters.AddWithValue("@Creation_dt", null);
 
                 int numRow = InsertOrUpdate(cmd);
-
+                
                 disconnect();
 
                 return numRow == 1;
-
             } catch (Exception)
             {
                 if (conn.State == System.Data.ConnectionState.Open) disconnect();

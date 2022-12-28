@@ -95,6 +95,7 @@ namespace SOMIOD.Controllers
 
                 connect();
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
                 cmd.Parameters.AddWithValue("@Name", value.Name);
                 cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
 
@@ -173,8 +174,6 @@ namespace SOMIOD.Controllers
                     disconnect();
                 return -1;
             }
-
-
         }
         //Remove a reference to an Application in the Module database table
 
