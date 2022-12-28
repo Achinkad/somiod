@@ -58,13 +58,13 @@ namespace SOMIOD.Controllers
         public bool Store(Subscription subscription, int parent_id)
         {
             // Check if Event String is "Creation" or "Deletion"
-            if (valid_events.Any(s => s.Contains(subscription.Event))) return false;
+            if (!valid_events.Any(s => s.Contains(subscription.Event))) return false;
 
             try
             {
                 connect();
 
-                string sql = "INSERT INTO subscriptions VALUES (@Name, @Creation_dt, @Parent, @Event, @Endpoint)";
+                string sql = "INSERT INTO subscriptions VALUES (@Name, @Creation_dt, @Event, @Endpoint, @Parent)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 
@@ -91,12 +91,8 @@ namespace SOMIOD.Controllers
 
         public bool UpdateSubcription(Subscription subscription)
         {
-            // Check if Module Parent exists
-            ModuleController module = new ModuleController();
-            if (module.GetModule(subscription.Parent) == null) return false;
-
             // Check if Event String is "Creation" or "Deletion"
-            if (valid_events.Any(s => s.Contains(subscription.Event))) return false;
+            if (!valid_events.Any(s => s.Contains(subscription.Event))) return false;
 
             try
             {

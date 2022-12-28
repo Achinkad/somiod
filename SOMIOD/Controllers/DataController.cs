@@ -75,13 +75,13 @@ namespace SOMIOD.Controllers
             {
                 connect();
 
-                string sql = "INSERT INTO data VALUES(@Content, @Parent, @Creation_dt)";
+                string sql = "INSERT INTO data VALUES(@Content, @Creation_dt, @Parent)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                
+
+                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
                 cmd.Parameters.AddWithValue("@Content", value.Content);
                 cmd.Parameters.AddWithValue("@Parent", parent_id);
-                cmd.Parameters.AddWithValue("@Creation_dt", null);
 
                 int numRow = InsertOrUpdate(cmd);
                 
@@ -132,7 +132,7 @@ namespace SOMIOD.Controllers
                     Id = (int)reader["Id"],
                     Content = (string)reader["Content"],
                     Parent = (int)reader["Parent"],
-                    Creation_dt =(DateTime)reader["Creation_dt"],
+                    Creation_dt = new DateTime(),
                 };
                 this.data_list.Add(data);
             }
