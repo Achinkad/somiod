@@ -46,13 +46,12 @@ namespace SOMIOD.Controllers
             try
             {
                 connect();
-                // id, string mname, DateTime creation_dt, int parent
-
+                
                 string sql = "INSERT INTO DATA VALUES(@content,@parent,@creation_dt)";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@content", value.Content);
                 cmd.Parameters.AddWithValue("@parent", value.Parent);
-                cmd.Parameters.AddWithValue("@creation_dt", value.Creation_dt);
+                cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now.ToString("yyyy-mm-dd HH:mm:ss"));
                 setSqlComand(sql);
 
                 int numRow = InsertOrUpdate(cmd);

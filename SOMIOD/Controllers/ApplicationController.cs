@@ -22,57 +22,121 @@ namespace SOMIOD.Controllers
         public List<Application> GetApplications()
         {
             List<Application> applications = new List<Application>();
-            setSqlComand("SELECT * FROM Application");
+            setSqlComand("SELECT * FROM applications");
             
             try
             {
                 connect();
                 Select();
                 disconnect();
+            }
+            catch (Exception)
+            {
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+            }
+
+            return new List<Application>(this.applications);
+        }
+
+        public Application GetApplication(int id)
+        {
+            try
+            {
+                connect();
+                setSqlComand("SELECT * FROM applications WHERE Id = @id");
+                Select(id);
+                disconnect();
+
+                if (this.applications[0] == null)
+                {
+                    return null;
+                }
+                return this.applications[0];
 
             }
             catch (Exception)
             {
+                //fechar ligação à DB
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
                     disconnect();
                 }
+                return null;
+                //return BadRequest();
             }
-            disconnect();
-            return new List<Application>(this.applications);
         }
+
+        public bool GetApplicationByName(string name)
+        {
+            try
+            {
+                connect();
+                setSqlComand("SELECT * FROM applications WHERE name = @name");
+                SelectByName(name);
+                disconnect();
+
+                return this.applications[0] != null ? true : false;
+            }
+            catch (Exception)
+            {
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                return false;
+            }
+        }
+
 
         //Store a new Apllication and their values in the database
         public bool Store(Application value)
         {
-            string sql = "INSERT INTO Application VALUES(@name,@creation_dt)";
-            SqlConnection conn = null;
+            string sql = "INSERT INTO applications VALUES(@Name, @Creation_dt)";
 
             try
             {
-                conn = new SqlConnection(connectionString);
-                conn.Open();
+                connect();
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@name", value.Name);
-                cmd.Parameters.AddWithValue("@creation_dt", value.Creation_dt);
+                //cmd.Parameters.AddWithValue("@Id", value.Id);
+                cmd.Parameters.AddWithValue("@Name", value.Name);
+                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
 
                 int numRegistos = InsertOrUpdate(cmd);
-                /*
-                int numRegistos = cmd.ExecuteNonQuery();
                 
-                conn.Close();
-                */
-                disconnect();
                 if (numRegistos > 0)
                 {
+                    disconnect();
                     return true;
                 }
+                disconnect();
                 return false;
             }
             catch (Exception)
             {
                 if (conn.State == System.Data.ConnectionState.Open)
                     disconnect();
+                return false;
+            }
+        }
+
+        public bool Update(Application value, int id)
+        {
+            string update_query = "UPDATE applications SET name = @name, creation_dt = @creation_dt WHERE Id = @id";
+
+            try
+            {
+                connect();
+
+                SqlCommand cmd = new SqlCommand(update_query, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@name", value.Name);
+                cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now);
+                int rows = InsertOrUpdate(cmd);
+
+                disconnect();
+
+                return rows > 0;
+            }
+            catch (Exception)
+            {
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
                 return false;
             }
         }
@@ -80,7 +144,7 @@ namespace SOMIOD.Controllers
         //Add a reference to an Application in the Module database table
         public int AddModule(int id_app, int id_module)
         {
-            string sql = "INSERT INTO Module VALUES (@parent) WHERE id=@IdApp";
+            string sql = "INSERT INTO modules VALUES (@parent) WHERE id=@IdApp";
             //SqlConnection conn = null;
             try
             {
@@ -116,7 +180,7 @@ namespace SOMIOD.Controllers
 
         public int RemoveModule(int id_app, int id_module)
         {
-            string sql = "DELETE FROM Modules VALUES (@parent) WHERE id=@IdApp";
+            string sql = "DELETE FROM modules VALUES (@parent) WHERE id=@IdApp";
             //SqlConnection conn = null;
             try
             {
@@ -145,41 +209,28 @@ namespace SOMIOD.Controllers
 
 
         }
-        //Delete a application from database
-        public int DeleteApplication(int id)
+
+        //Delete an application from database
+        public bool DeleteApplication(int id)
         {
-            //string sql = "DELETE FROM Application WHERE Id=@id";
-            //SqlConnection conn = null;
             try
             {
-                /*
-                conn = new SqlConnection(connectionString);
-                conn.Open();
-               */
                 connect();
-                setSqlComand("DELETE FROM Application WHERE Id=@id");
-                /*
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@idApp", id);
-                int numRegistos = cmd.ExecuteNonQuery();
-                */
+                setSqlComand("DELETE FROM applications WHERE Id=@id");
+
                 int numRegistos = Delete(id);
-                //conn.Close();
+                
                 disconnect();
-                if (numRegistos == 1)
-                {
-                    return 1;
-                }
-                return -1;
+
+                return numRegistos == 1;
             }
             catch (Exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open)
-                    //conn.Close();
-                    disconnect();
-                return -1;
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                return false;
             }
         }
+
         public override void readerIterator(SqlDataReader reader)
         {
             while (reader.Read())
