@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MosquittoPublisher")]
+[assembly: AssemblyTitle("MosquittoSubscriber")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("HP")]
-[assembly: AssemblyProduct("MosquittoPublisher")]
+[assembly: AssemblyProduct("MosquittoSubscriber")]
 [assembly: AssemblyCopyright("Copyright © HP 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("55d1fdc4-280d-488c-a628-b7594a43b010")]
+[assembly: Guid("fc3dbe24-2453-4400-8949-bccaeab8d7a7")]
 
 // Version information for an assembly consists of the following four values:
 //

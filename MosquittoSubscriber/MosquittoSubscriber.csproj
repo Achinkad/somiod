@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{55D1FDC4-280D-488C-A628-B7594A43B010}</ProjectGuid>
+    <ProjectGuid>{FC3DBE24-2453-4400-8949-BCCAEAB8D7A7}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>MosquittoPublisher</RootNamespace>
-    <AssemblyName>MosquittoPublisher</AssemblyName>
+    <RootNamespace>MosquittoSubscriber</RootNamespace>
+    <AssemblyName>MosquittoSubscriber</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
