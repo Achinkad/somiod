@@ -55,8 +55,12 @@ namespace SOMIOD.Controllers
             }
         }
 
-        public bool Store(Subscription subscription, int parent_id)
+        public bool Store(Subscription subscription)
         {
+            // Check if Module Parent exists
+            ModuleController module = new ModuleController();
+            if (module.GetModule(subscription.Parent) == null) return false;
+
             // Check if Event String is "Creation" or "Deletion"
             if (valid_events.Any(s => s.Contains(subscription.Event))) return false;
 
@@ -64,13 +68,13 @@ namespace SOMIOD.Controllers
             {
                 connect();
                 
-                string sql = "INSERT INTO subscriptions VALUES (@Name, @Creation_dt, @Parent, @Event, @Endpoint)";
+                string sql = "INSERT INTO subscriptions VALUES (@Name, @Creation_date, @Parent, @Event, @Endpoint)";
                
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 
                 cmd.Parameters.AddWithValue("@Name", subscription.Name);
-                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
-                cmd.Parameters.AddWithValue("@Parent", parent_id);
+                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now.ToString("yyyy-mm-dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@Parent", subscription.Parent);
                 cmd.Parameters.AddWithValue("@Event", subscription.Event);
                 cmd.Parameters.AddWithValue("@Endpoint", subscription.Endpoint);
                 
@@ -80,7 +84,7 @@ namespace SOMIOD.Controllers
                 
                 disconnect();
 
-                return numRow == 1;
+                return numRow == 1 ? true : false;
             }
             catch (Exception)
             {

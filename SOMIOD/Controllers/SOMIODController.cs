@@ -157,19 +157,19 @@ namespace SOMIOD.Controllers
         }
 
         // POST: api/somiod/{application} -> Stores a new Module
-        [HttpPost, Route("api/somiod/{application_name}")]
+        [HttpPost, Route("api/somiod/{application}")]
         public IHttpActionResult PostModule(string application_name, [FromBody] Module value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
             if (value.Res_type != "module") return BadRequest("Request type is different from 'module'.");
 
             ApplicationController application = new ApplicationController();
-            if (application.GetApplicationByName(application_name) == -1) return BadRequest("The application '" + application_name + "' does not exist.");
+            if (application.GetApplicationByName(application_name)) return BadRequest("The application '" + application_name + "' does not exist.");
 
             try
             {
                 ModuleController module = new ModuleController();
-                bool response = module.Store(value, application.GetApplicationByName(application_name));
+                bool response = module.Store(value);
                 if (!response) return BadRequest("Operation Failed");
                 return Ok("A new Module was stored with success!");
             }
@@ -221,18 +221,11 @@ namespace SOMIOD.Controllers
 
         /* --- SUBSCRIPTION / DATA API ROUTES --- */
 
-        // POST: api/somiod/{application_name}/{module_name} -> Stores a new Subscription Or Data
-        [HttpPost, Route("api/somiod/{application_name}/{module_name}")]
-        public IHttpActionResult PostSubscriptionOrData(string application_name, string module_name, [FromBody] JObject request)
+        // POST: api/somiod/{application}/{module} -> Stores a new Subscription Or Data
+        [HttpPost, Route("api/somiod/{application}/{module}")]
+        public IHttpActionResult PostSubscriptionOrData([FromBody] JObject request)
         {
             if (request == null) return BadRequest("Please provide the required information for this request.");
-
-            ApplicationController application = new ApplicationController();
-            if (application.GetApplicationByName(application_name) == -1) return BadRequest("The application '" + application_name + "' does not exist.");
-
-            ModuleController module = new ModuleController();
-            if (module.GetModuleByName(module_name) == -1) return BadRequest("The module '" + module_name + "' does not exist.");
-
 
             switch (request["res_type"].ToString())
             {
@@ -242,9 +235,9 @@ namespace SOMIOD.Controllers
                     try
                     {
                         DataController data = new DataController();
-                        bool response = data.Store(request.ToObject<Data>(), module.GetModuleByName(module_name));
-                        if (!response) return BadRequest("Operation Failed");
-                        return Ok("A new Data was stored with success!");
+                        bool response = data.Store(request.ToObject<Data>());
+                        if (!response) return InternalServerError();
+                        return Ok();
                     }
                     catch (Exception exception)
                     {
@@ -257,9 +250,9 @@ namespace SOMIOD.Controllers
                     try
                     {
                         SubscriptionController subscription = new SubscriptionController();
-                        bool response = subscription.Store(request.ToObject<Subscription>(), module.GetModuleByName(module_name));
-                        if (!response) return BadRequest("Operation Failed");
-                        return Ok("A new Subscription was stored with success!");
+                        bool response = subscription.Store(request.ToObject<Subscription>());
+                        if (!response) return InternalServerError();
+                        return Ok();
                     }
                     catch (Exception exception)
                     {
