@@ -48,7 +48,7 @@ namespace MosquittoSubscriber
 
         async private void a(object sender, EventArgs e)
         {
-      
+            
 
             mClient.Connect(Guid.NewGuid().ToString());
             if (!mClient.IsConnected)
@@ -77,7 +77,7 @@ namespace MosquittoSubscriber
 
             var responseString_application = await response_application.Content.ReadAsStringAsync();
 
-            MessageBox.Show(responseString_application);
+            //MessageBox.Show(responseString_application);
 
             //POST DO MODULE
 
@@ -97,7 +97,7 @@ namespace MosquittoSubscriber
 
             var responseString_module = await response_module.Content.ReadAsStringAsync();
 
-            MessageBox.Show(responseString_module);
+            //MessageBox.Show(responseString_module);
 
             //POST DO SUBSCRIPTION
 
@@ -119,7 +119,7 @@ namespace MosquittoSubscriber
 
             var responseString_subscription = await response_subscription.Content.ReadAsStringAsync();
 
-            MessageBox.Show(responseString_subscription);
+            //MessageBox.Show(responseString_subscription);
 
             /////////////////////////////////////////////////////////////////////////7
 
