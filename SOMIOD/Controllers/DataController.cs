@@ -19,7 +19,7 @@ namespace SOMIOD.Controllers
         public List<Data> GetData()
         {
             List<Data> data_list = new List<Data>();
-            setSqlComand("SELECT * FROM Data");
+            setSqlComand("SELECT * FROM data");
 
             try
             {
@@ -37,6 +37,34 @@ namespace SOMIOD.Controllers
             }
             disconnect();
             return new List<Data>(this.data_list);
+        }
+
+        public Data GetData(int id)
+        {
+            try {
+
+                connect();
+                setSqlComand("SELECT * FROM data WHERE Id=@id");
+                Select(id);
+                disconnect();
+
+                if (this.data_list[0] == null)
+                {
+                    return null;
+                }
+                return this.data_list[0];
+
+            }
+            catch (Exception)
+            {
+                //fechar ligação à DB
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    disconnect();
+                }
+                return null;
+                //return BadRequest();
+            }
         }
 
         //Store a new Data and their values in the database
