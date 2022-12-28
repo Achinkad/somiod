@@ -66,7 +66,7 @@ namespace SOMIOD.Controllers
             }
         }
 
-        public bool GetApplicationByName(string name)
+        public int GetApplicationByName(string name)
         {
             try
             {
@@ -75,12 +75,12 @@ namespace SOMIOD.Controllers
                 SelectByName(name);
                 disconnect();
 
-                return this.applications[0] != null ? true : false;
+                return applications.Count() > 0 ? applications[0].Id : -1;
             }
             catch (Exception)
             {
                 if (conn.State == System.Data.ConnectionState.Open) disconnect();
-                return false;
+                return -1;
             }
         }
 
@@ -94,7 +94,7 @@ namespace SOMIOD.Controllers
             {
                 connect();
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                //cmd.Parameters.AddWithValue("@Id", value.Id);
+
                 cmd.Parameters.AddWithValue("@Name", value.Name);
                 cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
 
