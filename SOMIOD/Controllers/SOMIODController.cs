@@ -20,10 +20,8 @@ namespace SOMIOD.Controllers
         
         // GET: api/somiod/applications -> Get all applications 
         [HttpGet, Route("api/somiod/applications")]
-        public IHttpActionResult GetApplications([FromBody] Application value)
+        public IHttpActionResult GetApplications()
         {
-            if (value == null) return BadRequest("Please provide the required information for this request.");
-
             try
             {
                 ApplicationController app = new ApplicationController();
@@ -38,10 +36,8 @@ namespace SOMIOD.Controllers
 
         // GET: api/somiod/applications/{id} -> Gets an application
         [HttpGet, Route("api/somiod/applications/{id}")]
-        public IHttpActionResult GetApplicationById(int id, [FromBody] Application value)
+        public IHttpActionResult GetApplicationById(int id)
         {
-            if (value == null) return BadRequest("Please provide the required information for this request.");
-
             try
             {
                 ApplicationController app = new ApplicationController();
@@ -95,10 +91,8 @@ namespace SOMIOD.Controllers
 
         // DELETE: api/somiod/applications/{id} -> Deletes an Application
         [HttpDelete, Route("api/somiod/applications/{id}")]
-        public IHttpActionResult DeleteApplication(int id, [FromBody] Application value)
+        public IHttpActionResult DeleteApplication(int id)
         {
-            if (value == null) return BadRequest("Please provide the required information for this request.");
-
             try
             {
                 ApplicationController app = new ApplicationController();
@@ -116,10 +110,8 @@ namespace SOMIOD.Controllers
 
         // GET: api/somiod/modules -> Get all modules
         [HttpGet, Route("api/somiod/modules")]
-        public IHttpActionResult GetModules([FromBody] Module value)
+        public IHttpActionResult GetModules()
         {
-            if (value == null) return BadRequest("Please provide the required information for this request.");
-
             try
             {
                 ModuleController module = new ModuleController();
@@ -134,10 +126,8 @@ namespace SOMIOD.Controllers
 
         // GET: api/somiod/modules/{id} -> Gets a module
         [HttpGet, Route("api/somiod/modules/{id}")]
-        public IHttpActionResult GetModuleById(int id, [FromBody] Module value)
+        public IHttpActionResult GetModuleById(int id)
         {
-            if (value == null) return BadRequest("Please provide the required information for this request.");
-
             try
             {
                 ModuleController module = new ModuleController();
@@ -194,10 +184,8 @@ namespace SOMIOD.Controllers
 
         // DELETE: api/somiod/modules/{id} -> Deletes a Module
         [HttpDelete, Route("api/somiod/modules/{id}")]
-        public IHttpActionResult DeleteModule(int id, [FromBody] Module value)
+        public IHttpActionResult DeleteModule(int id)
         {
-            if (value == null) return BadRequest("Please provide the required information for this request.");
-
             try
             {
                 ModuleController module = new ModuleController();
@@ -267,10 +255,8 @@ namespace SOMIOD.Controllers
 
         // DELETE: api/somiod/datas/{id} -> Deletes a Data Resource
         [HttpDelete, Route("api/somiod/datas/{id}")]
-        public IHttpActionResult DeleteData(int id, [FromBody] Data value)
+        public IHttpActionResult DeleteData(int id)
         {
-            if (value == null) return BadRequest("Please provide the required information for this request.");
-
             try
             {
                 DataController data = new DataController();
@@ -286,10 +272,8 @@ namespace SOMIOD.Controllers
 
         // DELETE: api/somiod/subscriptions/{id} -> Deletes a Subscription Resource
         [HttpDelete, Route("api/somiod/subscriptions/{id}")]
-        public IHttpActionResult DeleteSubscription(int id, [FromBody] Subscription value)
+        public IHttpActionResult DeleteSubscription(int id)
         {
-            if (value == null) return BadRequest("Please provide the required information for this request.");
-
             try
             {
                 SubscriptionController subscription = new SubscriptionController();

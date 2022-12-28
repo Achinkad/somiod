@@ -18,10 +18,10 @@ namespace SOMIOD.Controllers
             this.applications = new List<Application>();   
         }
         
-        //Select Aplications
         public List<Application> GetApplications()
         {
             List<Application> applications = new List<Application>();
+            
             setSqlComand("SELECT * FROM applications");
             
             try
@@ -30,9 +30,10 @@ namespace SOMIOD.Controllers
                 Select();
                 disconnect();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                throw exception;
             }
 
             return new List<Application>(this.applications);
