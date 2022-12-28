@@ -233,10 +233,12 @@ namespace SOMIOD.Controllers
             ModuleController module = new ModuleController();
             if (module.GetModuleByName(module_name) == -1) return BadRequest("The module '" + module_name + "' does not exist.");
 
-            switch (request["res_type"].ToString())
+            var request_type = request["res_type"].ToString();
+
+            switch (request_type)
             {
                 case "data":
-                    if (!request["res_type"].Equals("data")) return BadRequest("Request type is different from 'data'.");
+                    if (request_type != "data") return BadRequest("Request type is different from 'data'.");
 
                     try
                     {
@@ -251,7 +253,7 @@ namespace SOMIOD.Controllers
                     }
 
                 case "subscription":
-                    if (!request["res_type"].Equals("subscription")) return BadRequest("Request type is different from 'subscription'.");
+                    if (request_type != "subscription") return BadRequest("Request type is different from 'subscription'.");
 
                     try
                     {

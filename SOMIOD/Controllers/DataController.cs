@@ -47,22 +47,19 @@ namespace SOMIOD.Controllers
             {
                 connect();
 
-                string sql = "INSERT INTO data VALUES(@content, @parent, @creation_dt)";
+                string sql = "INSERT INTO data VALUES(@Content, @Parent, @Creation_dt)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 
-                cmd.Parameters.AddWithValue("@content", value.Content);
-                cmd.Parameters.AddWithValue("@parent", parent_id);
-                cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now);
-
-                setSqlComand(sql);
+                cmd.Parameters.AddWithValue("@Content", value.Content);
+                cmd.Parameters.AddWithValue("@Parent", parent_id);
+                cmd.Parameters.AddWithValue("@Creation_dt", null);
 
                 int numRow = InsertOrUpdate(cmd);
                 
                 disconnect();
 
                 return numRow == 1;
-
             } catch (Exception)
             {
                 if (conn.State == System.Data.ConnectionState.Open) disconnect();

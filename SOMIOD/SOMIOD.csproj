@@ -86,11 +86,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\SOMIOD_DB.mdf" />
-    <Content Include="App_Data\SOMIOD_DB_log.ldf">
-      <DependentUpon>SOMIOD_DB.mdf</DependentUpon>
-    </Content>
     <Content Include="App_Data\dbo.SOMIOD.sql" />
+    <Content Include="App_Data\SOMIOD_BD.mdf" />
+    <Content Include="App_Data\SOMIOD_BD_log.ldf">
+      <DependentUpon>SOMIOD_BD.mdf</DependentUpon>
+    </Content>
     <Content Include="Global.asax" />
     <Content Include="index.html" />
     <Content Include="Web.config" />
