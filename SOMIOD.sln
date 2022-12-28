@@ -5,6 +5,10 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOMIOD", "SOMIOD\SOMIOD.csproj", "{44F3DE48-0A9F-464D-8A6C-CCE3E93F6DD5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MosquittoSubscriber", "MosquittoSubscriber\MosquittoSubscriber.csproj", "{FC3DBE24-2453-4400-8949-BCCAEAB8D7A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MosquittoPublisher", "MosquittoPublisher\MosquittoPublisher.csproj", "{55D1FDC4-280D-488C-A628-B7594A43B010}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{44F3DE48-0A9F-464D-8A6C-CCE3E93F6DD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44F3DE48-0A9F-464D-8A6C-CCE3E93F6DD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44F3DE48-0A9F-464D-8A6C-CCE3E93F6DD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC3DBE24-2453-4400-8949-BCCAEAB8D7A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC3DBE24-2453-4400-8949-BCCAEAB8D7A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC3DBE24-2453-4400-8949-BCCAEAB8D7A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC3DBE24-2453-4400-8949-BCCAEAB8D7A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55D1FDC4-280D-488C-A628-B7594A43B010}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55D1FDC4-280D-488C-A628-B7594A43B010}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55D1FDC4-280D-488C-A628-B7594A43B010}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55D1FDC4-280D-488C-A628-B7594A43B010}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -92,6 +92,7 @@ namespace SOMIOD.Controllers
 
             try
             {
+
                 connect();
                 SqlCommand cmd = new SqlCommand(sql, conn);
 

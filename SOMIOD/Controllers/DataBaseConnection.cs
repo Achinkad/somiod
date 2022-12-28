@@ -4,17 +4,20 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using System.Windows;
 
 namespace SOMIOD.Controllers
 {
     public abstract class DatabaseConnection
     {
         protected SqlConnection conn;
+
         protected String connectionString = Properties.Settings.Default.ConnStr;
         protected string sql = "";
 
         protected void connect()
         {
+          
             this.conn = null;
             this.conn = new SqlConnection(connectionString);
             this.conn.Open();
