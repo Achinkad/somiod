@@ -173,8 +173,6 @@ namespace SOMIOD.Controllers
                     disconnect();
                 return -1;
             }
-
-
         }
         //Remove a reference to an Application in the Module database table
 
