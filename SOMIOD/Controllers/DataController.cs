@@ -41,32 +41,30 @@ namespace SOMIOD.Controllers
 
         //Store a new Data and their values in the database
 
-        public bool Store(Data value)
+        public bool Store(Data value, int parent_id)
         {
             try
             {
                 connect();
-                // id, string mname, DateTime creation_dt, int parent
+                
+                string sql = "INSERT INTO data VALUES(@content, @parent, @creation_dt)";
 
-                string sql = "INSERT INTO DATA VALUES(@content,@parent,@creation_dt)";
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
                 cmd.Parameters.AddWithValue("@content", value.Content);
-                cmd.Parameters.AddWithValue("@parent", value.Parent);
-                cmd.Parameters.AddWithValue("@creation_dt", value.Creation_dt);
+                cmd.Parameters.AddWithValue("@parent", parent_id);
+                cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now);
                 setSqlComand(sql);
 
                 int numRow = InsertOrUpdate(cmd);
+
                 disconnect();
-                if (numRow == 1)
-                {
-                    return true;
-                }
-                return false;
+
+                return numRow == 1;
 
             } catch (Exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open)
-                    conn.Close();
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
                 return false;
             }
         }

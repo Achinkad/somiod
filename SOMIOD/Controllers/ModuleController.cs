@@ -69,98 +69,94 @@ namespace SOMIOD.Controllers
             }
         }
 
-        public bool Store(Module module) {
-            try
-            {
-                connect();
-                // id, string mname, DateTime creation_dt, int parent
-
-                string sql = "INSERT INTO modules VALUES (@Id,@Name,@Creation_date,@Parent)";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@Id", module.Id);
-                cmd.Parameters.AddWithValue("@Name", module.Name);
-                cmd.Parameters.AddWithValue("@Creation_dt", module.Creation_dt);
-                cmd.Parameters.AddWithValue("@Parent", module.Parent);
-                setSqlComand(sql);
-
-                int numRow = InsertOrUpdate(cmd);
-                disconnect();
-                if (numRow == 1)
-                {
-                    return true;
-                }
-                return false;
-
-            }
-            catch (Exception)
-            {
-                //fechar ligação à DB
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    disconnect();
-                }
-                return false;
-            }
-        }
-
-        public int UpdateModule(Module module)
+        public int GetModuleByName(string name)
         {
             try
             {
                 connect();
-                string sql = "UPDATE modules SET Id = @Id, Name = @Name, Creation_date = @Creation_date, Parent = @Parent WHERE id = @id";
+                setSqlComand("SELECT * FROM modules WHERE name = @name");
+                SelectByName(name);
+                disconnect();
+
+                return modules.Count() > 0 ? modules[0].Id : -1;
+            }
+            catch (Exception)
+            {
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                return -1;
+            }
+        }
+
+        public bool Store(Module module, int parent_id) {
+            try
+            {
+                connect();
+
+                string sql = "INSERT INTO modules VALUES (@Name, @Creation_dt, @Parent)";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@Id", module.Id);
+
                 cmd.Parameters.AddWithValue("@Name", module.Name);
-                cmd.Parameters.AddWithValue("@Creation_dt", module.Creation_dt);
-                cmd.Parameters.AddWithValue("@Parent", module.Parent);
+                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
+                cmd.Parameters.AddWithValue("@Parent", parent_id);
+
                 setSqlComand(sql);
 
                 int numRow = InsertOrUpdate(cmd);
 
                 disconnect();
-                if (numRow == 1)
-                {
-                    return numRow;
-                }
-                return -1;
 
+                return numRow == 1;
             }
             catch (Exception)
             {
-                //fechar ligação à DB
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    disconnect();
-                }
-
-                return -1;
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                return false;
             }
         }
 
-        public int DeleteModule(int id) {
+        public bool UpdateModule(Module module, int id)
+        {
             try
             {
                 connect();
+                string sql = "UPDATE modules SET name = @Name, creation_dt = @Creation_dt WHERE id = @id";
+                
+                SqlCommand cmd = new SqlCommand(sql, conn);
 
-                setSqlComand("DELETE FROM modules WHERE id = @id");
-                int numRow = Delete(id);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@Name", module.Name);
+                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
+
+                setSqlComand(sql);
+
+                int numRow = InsertOrUpdate(cmd);
+
                 disconnect();
-                if (numRow == 1)
-                {
-                    return 1;
-                }
-                return -1;
 
+                return numRow == 1;
             }
             catch (Exception)
             {
-                //fechar ligação à DB
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    disconnect();
-                }
-                return -1;
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                return false;
+            }
+        }
+
+        public bool DeleteModule(int id) {
+            try
+            {
+                connect();
+                setSqlComand("DELETE FROM modules WHERE id = @id");
+                int numRow = Delete(id);
+                disconnect();
+
+                return numRow == 1;
+            }
+            catch (Exception)
+            {
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                return false;
             }
         }
 
@@ -172,9 +168,9 @@ namespace SOMIOD.Controllers
                 {
                     Id=(int)reader["id"],
                     Name=(string)reader["name"],
-                    Creation_dt = new DateTime(),
+                    Creation_dt = new DateTime(),//TODO: verificar data
                     Parent = (int)reader["parent"],
-                    };
+                };
 
                 this.modules.Add(module);
             }
