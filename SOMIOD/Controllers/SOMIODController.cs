@@ -23,7 +23,6 @@ namespace SOMIOD.Controllers
         public IHttpActionResult GetApplications([FromBody] Application value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
-            if (value.Res_type != "application") return BadRequest("Request type is different from 'application'.");
 
             try
             {
@@ -42,7 +41,6 @@ namespace SOMIOD.Controllers
         public IHttpActionResult GetApplicationById(int id, [FromBody] Application value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
-            if (value.Res_type != "application") return BadRequest("Request type is different from 'application'.");
 
             try
             {
@@ -81,7 +79,6 @@ namespace SOMIOD.Controllers
         public IHttpActionResult PutApplication(int id, [FromBody] Application value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
-            if (value.Res_type != "application") return BadRequest("Request type is different from 'application'.");
 
             try
             {
@@ -101,7 +98,6 @@ namespace SOMIOD.Controllers
         public IHttpActionResult DeleteApplication(int id, [FromBody] Application value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
-            if (value.Res_type != "application") return BadRequest("Request type is different from 'application'.");
 
             try
             {
@@ -123,7 +119,6 @@ namespace SOMIOD.Controllers
         public IHttpActionResult GetModules([FromBody] Module value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
-            if (value.Res_type != "module") return BadRequest("Request type is different from 'module'.");
 
             try
             {
@@ -142,7 +137,6 @@ namespace SOMIOD.Controllers
         public IHttpActionResult GetModuleById(int id, [FromBody] Module value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
-            if (value.Res_type != "module") return BadRequest("Request type is different from 'module'.");
 
             try
             {
@@ -184,7 +178,6 @@ namespace SOMIOD.Controllers
         public IHttpActionResult PutModule(int id, [FromBody] Module value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
-            if (value.Res_type != "module") return BadRequest("Request type is different from 'module'.");
 
             try
             {
@@ -204,7 +197,6 @@ namespace SOMIOD.Controllers
         public IHttpActionResult DeleteModule(int id, [FromBody] Module value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
-            if (value.Res_type != "module") return BadRequest("Request type is different from 'module'.");
 
             try
             {
@@ -278,7 +270,6 @@ namespace SOMIOD.Controllers
         public IHttpActionResult DeleteData(int id, [FromBody] Data value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
-            if (value.Res_type != "data") return BadRequest("Request type is different from 'data'.");
 
             try
             {
@@ -298,7 +289,6 @@ namespace SOMIOD.Controllers
         public IHttpActionResult DeleteSubscription(int id, [FromBody] Subscription value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
-            if (value.Res_type != "subscription") return BadRequest("Request type is different from 'subscription'.");
 
             try
             {
