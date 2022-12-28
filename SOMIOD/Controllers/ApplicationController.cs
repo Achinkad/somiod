@@ -234,6 +234,8 @@ namespace SOMIOD.Controllers
         {
             while (reader.Read())
             {
+                string date = (string)reader["Creation_dt"];
+                Console.WriteLine(date);
                 Application application = new Application
                 {
                     Id = (int)reader["Id"],
