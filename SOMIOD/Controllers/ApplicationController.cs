@@ -22,23 +22,19 @@ namespace SOMIOD.Controllers
         public List<Application> GetApplications()
         {
             List<Application> applications = new List<Application>();
-            setSqlComand("SELECT * FROM Application");
+            setSqlComand("SELECT * FROM applications");
             
             try
             {
                 connect();
                 Select();
                 disconnect();
-
             }
             catch (Exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    disconnect();
-                }
+                if (conn.State == System.Data.ConnectionState.Open) disconnect();
             }
-            disconnect();
+
             return new List<Application>(this.applications);
         }
 
@@ -47,7 +43,7 @@ namespace SOMIOD.Controllers
             try
             {
                 connect();
-                setSqlComand("SELECT * FROM applications WHERE Id=@id");
+                setSqlComand("SELECT * FROM applications WHERE Id = @id");
                 Select(id);
                 disconnect();
 
@@ -75,7 +71,7 @@ namespace SOMIOD.Controllers
             try
             {
                 connect();
-                setSqlComand("SELECT * FROM applications WHERE name=@name");
+                setSqlComand("SELECT * FROM applications WHERE name = @name");
                 SelectByName(name);
                 disconnect();
 
@@ -92,7 +88,7 @@ namespace SOMIOD.Controllers
         //Store a new Apllication and their values in the database
         public bool Store(Application value)
         {
-            string sql = "INSERT INTO applications VALUES(@Name,@Creation_dt)";
+            string sql = "INSERT INTO applications VALUES(@Name, @Creation_dt)";
 
             try
             {
@@ -122,7 +118,7 @@ namespace SOMIOD.Controllers
 
         public bool Update(Application value)
         {
-            string update_query = "UPDATE applications SET name = @name, creation_dt = @creation_dt WHERE @id = id";
+            string update_query = "UPDATE applications SET name = @name, creation_dt = @creation_dt WHERE Id = @id";
 
             try
             {
@@ -147,7 +143,7 @@ namespace SOMIOD.Controllers
         //Add a reference to an Application in the Module database table
         public int AddModule(int id_app, int id_module)
         {
-            string sql = "INSERT INTO Module VALUES (@parent) WHERE id=@IdApp";
+            string sql = "INSERT INTO modules VALUES (@parent) WHERE id=@IdApp";
             //SqlConnection conn = null;
             try
             {
@@ -183,7 +179,7 @@ namespace SOMIOD.Controllers
 
         public int RemoveModule(int id_app, int id_module)
         {
-            string sql = "DELETE FROM Modules VALUES (@parent) WHERE id=@IdApp";
+            string sql = "DELETE FROM modules VALUES (@parent) WHERE id=@IdApp";
             //SqlConnection conn = null;
             try
             {
@@ -219,7 +215,7 @@ namespace SOMIOD.Controllers
             try
             {
                 connect();
-                setSqlComand("DELETE FROM Application WHERE Id=@id");
+                setSqlComand("DELETE FROM applications WHERE Id=@id");
 
                 int numRegistos = Delete(id);
                 

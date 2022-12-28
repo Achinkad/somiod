@@ -10,6 +10,7 @@ using System.Web.Http.Results;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Net.Http.Formatting;
 
 namespace SOMIOD.Controllers
 {
@@ -38,7 +39,7 @@ namespace SOMIOD.Controllers
 
         // GET: api/somiod/applications/{id} -> Gets an application
         [HttpGet, Route("api/somiod/applications/{id}")]
-        public IHttpActionResult GetApplicationById([FromBody] Application value)
+        public IHttpActionResult GetApplicationById(int id, [FromBody] Application value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
             if (value.Res_type != "application") return BadRequest("Request type is different from 'application'.");
@@ -46,7 +47,7 @@ namespace SOMIOD.Controllers
             try
             {
                 ApplicationController app = new ApplicationController();
-                Application response = app.GetApplication(value.Id);
+                Application response = app.GetApplication(id);
                 return Ok(response);
             }
             catch (Exception exception)
