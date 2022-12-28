@@ -23,12 +23,12 @@ namespace SOMIOD.Controllers
         public List<Module> GetModules() {
 
             List<Module> modules = new List<Module>();
-            setSqlComand("SELECT * FROM modules ORDER BY Id");
+            SetSqlComand("SELECT * FROM modules ORDER BY Id");
             try
             {
-                connect();
+                Connect();
                 Select();
-                disconnect();
+                Disconnect();
 
             }
             catch (Exception e) 
@@ -45,10 +45,10 @@ namespace SOMIOD.Controllers
         {
             try
             {
-                connect();
-                setSqlComand("SELECT * FROM modules WHERE Id=@id");
+                Connect();
+                SetSqlComand("SELECT * FROM modules WHERE Id=@id");
                 Select(id);
-                disconnect();
+                Disconnect();
 
                 if (this.modules[0] == null)
                 {
@@ -62,7 +62,7 @@ namespace SOMIOD.Controllers
                 //fechar ligação à DB
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
-                    disconnect();
+                    Disconnect();
                 }
                 return null;
                 //return BadRequest();
@@ -73,16 +73,16 @@ namespace SOMIOD.Controllers
         {
             try
             {
-                connect();
-                setSqlComand("SELECT * FROM modules WHERE name = @name");
+                Connect();
+                SetSqlComand("SELECT * FROM modules WHERE name = @name");
                 SelectByName(name);
-                disconnect();
+                Disconnect();
 
                 return modules.Count() > 0 ? modules[0].Id : -1;
             }
             catch (Exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
                 return -1;
             }
         }
@@ -90,7 +90,7 @@ namespace SOMIOD.Controllers
         public bool Store(Module module, int parent_id) {
             try
             {
-                connect();
+                Connect();
 
                 string sql = "INSERT INTO modules VALUES (@Name, @Creation_dt, @Parent)";
 
@@ -100,17 +100,17 @@ namespace SOMIOD.Controllers
                 cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
                 cmd.Parameters.AddWithValue("@Parent", parent_id);
 
-                setSqlComand(sql);
+                SetSqlComand(sql);
 
                 int numRow = InsertOrUpdate(cmd);
                 
-                disconnect();
+                Disconnect();
 
                 return numRow == 1;
             }
             catch (Exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
                 return false;
             }
         }
@@ -119,7 +119,7 @@ namespace SOMIOD.Controllers
         {
             try
             {
-                connect();
+                Connect();
                
                 string sql = "UPDATE modules SET name = @Name, creation_dt = @Creation_dt WHERE id = @id"; 
                 
@@ -129,16 +129,16 @@ namespace SOMIOD.Controllers
                 cmd.Parameters.AddWithValue("@Name", module.Name);
                 cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
                
-                setSqlComand(sql);
+                SetSqlComand(sql);
 
                 int numRow = InsertOrUpdate(cmd);
 
-                disconnect();
+                Disconnect();
                 return numRow == 1;
             }
             catch (Exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
                 return false;
             }
         }
@@ -146,21 +146,21 @@ namespace SOMIOD.Controllers
         public bool DeleteModule(int id) {
             try
             {
-                connect();
-                setSqlComand("DELETE FROM modules WHERE id = @id");
+                Connect();
+                SetSqlComand("DELETE FROM modules WHERE id = @id");
                 int numRow = Delete(id);
-                disconnect();
+                Disconnect();
 
                 return numRow == 1;
             }
             catch (Exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
                 return false;
             }
         }
 
-        public override void readerIterator(SqlDataReader reader) {
+        public override void ReaderIterator(SqlDataReader reader) {
             this.modules = new List<Module>();
             while (reader.Read())
             {

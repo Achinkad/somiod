@@ -15,60 +15,49 @@ namespace SOMIOD.Controllers
         protected String connectionString = Properties.Settings.Default.ConnStr;
         protected string sql = "";
 
-        protected void connect()
+        protected void Connect()
         {
-          
-            this.conn = null;
-            this.conn = new SqlConnection(connectionString);
-            this.conn.Open();
-            Console.WriteLine("Connection DONE");
-
+            conn = null;
+            conn = new SqlConnection(connectionString);
+            conn.Open();
         }
 
-        protected void disconnect()
+        protected void Disconnect()
         {
             conn.Close();
-            Console.WriteLine("DISCONECT");
         }
 
-        protected void setSqlComand(string sql)
+        protected void SetSqlComand(string sql)
         {
             this.sql = sql;
-            Console.WriteLine("SQL was DEFINED");
         }
 
         protected void Select() 
         {
-            SqlCommand cmd = new SqlCommand(this.sql, this.conn);
-
+            SqlCommand cmd = new SqlCommand(sql, conn);
             SqlDataReader reader = cmd.ExecuteReader();
-            readerIterator(reader);
-
+            ReaderIterator(reader);
             reader.Close();
         }
 
-        public abstract void readerIterator(SqlDataReader reader);
-
         protected void Select(int id)
         {
-            SqlCommand cmd = new SqlCommand(this.sql, conn);
+            SqlCommand cmd = new SqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@id", id);
 
             SqlDataReader reader = cmd.ExecuteReader();
-            readerIterator(reader);
+            ReaderIterator(reader);
             reader.Close();
-            Console.WriteLine("Select DONE");
         }
 
         protected void SelectByName(string name)
         {
-            SqlCommand cmd = new SqlCommand(this.sql, conn);
+            SqlCommand cmd = new SqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@name", name);
 
             SqlDataReader reader = cmd.ExecuteReader();
-            readerIterator(reader);
+            ReaderIterator(reader);
             reader.Close();
-            Console.WriteLine("Select DONE");
         }
 
         protected int InsertOrUpdate(SqlCommand cmd)
@@ -80,8 +69,9 @@ namespace SOMIOD.Controllers
         {
             SqlCommand cmd = new SqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@id", id);
-
             return cmd.ExecuteNonQuery();
         }
+
+        public abstract void ReaderIterator(SqlDataReader reader);
     }
 }

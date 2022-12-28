@@ -19,23 +19,23 @@ namespace SOMIOD.Controllers
         public List<Data> GetData()
         {
             List<Data> data_list = new List<Data>();
-            setSqlComand("SELECT * FROM data");
+            SetSqlComand("SELECT * FROM data");
 
             try
             {
-                connect();
+                Connect();
                 Select();
-                disconnect();  
+                Disconnect();  
 
             }
             catch (Exception)
             {
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
-                    disconnect();
+                    Disconnect();
                 }
             }
-            disconnect();
+            Disconnect();
             return new List<Data>(this.data_list);
         }
 
@@ -43,10 +43,10 @@ namespace SOMIOD.Controllers
         {
             try {
 
-                connect();
-                setSqlComand("SELECT * FROM data WHERE Id=@id");
+                Connect();
+                SetSqlComand("SELECT * FROM data WHERE Id=@id");
                 Select(id);
-                disconnect();
+                Disconnect();
 
                 if (this.data_list[0] == null)
                 {
@@ -60,7 +60,7 @@ namespace SOMIOD.Controllers
                 //fechar ligação à DB
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
-                    disconnect();
+                    Disconnect();
                 }
                 return null;
                 //return BadRequest();
@@ -73,7 +73,7 @@ namespace SOMIOD.Controllers
         {
             try
             {
-                connect();
+                Connect();
 
                 string sql = "INSERT INTO data VALUES(@Content, @Creation_dt, @Parent)";
 
@@ -85,12 +85,12 @@ namespace SOMIOD.Controllers
 
                 int numRow = InsertOrUpdate(cmd);
                 
-                disconnect();
+                Disconnect();
 
                 return numRow == 1;
             } catch (Exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
                 return false;
             }
         }
@@ -100,11 +100,11 @@ namespace SOMIOD.Controllers
         {
             try
             {
-                connect();
+                Connect();
 
-                setSqlComand("DELETE FROM Data WHERE Id=@IdApp");
+                SetSqlComand("DELETE FROM Data WHERE Id=@IdApp");
                 int numRow = Delete(id);
-                disconnect();
+                Disconnect();
                 if (numRow == 1)
                 {
                     return true;
@@ -117,12 +117,12 @@ namespace SOMIOD.Controllers
                 //fechar ligação à DB
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
-                    disconnect();
+                    Disconnect();
                 }
                 return false;
             }
         }
-        public override void readerIterator(SqlDataReader reader)
+        public override void ReaderIterator(SqlDataReader reader)
         {
             this.data_list = new List<Data>();
             while (reader.Read())

@@ -22,17 +22,17 @@ namespace SOMIOD.Controllers
         {
             List<Application> applications = new List<Application>();
             
-            setSqlComand("SELECT * FROM applications");
+            SetSqlComand("SELECT * FROM applications");
             
             try
             {
-                connect();
+                Connect();
                 Select();
-                disconnect();
+                Disconnect();
             }
             catch (Exception exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
                 throw exception;
             }
 
@@ -43,27 +43,17 @@ namespace SOMIOD.Controllers
         {
             try
             {
-                connect();
-                setSqlComand("SELECT * FROM applications WHERE Id = @id");
+                Connect();
+                SetSqlComand("SELECT * FROM applications WHERE Id = @id");
                 Select(id);
-                disconnect();
+                Disconnect();
 
-                if (this.applications[0] == null)
-                {
-                    return null;
-                }
-                return this.applications[0];
-
+                return applications.Count() > 0 ? applications[0] : null;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                //fechar ligação à DB
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    disconnect();
-                }
-                return null;
-                //return BadRequest();
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
             }
         }
 
@@ -71,50 +61,43 @@ namespace SOMIOD.Controllers
         {
             try
             {
-                connect();
-                setSqlComand("SELECT * FROM applications WHERE name = @name");
+                Connect();
+                SetSqlComand("SELECT * FROM applications WHERE name = @name");
                 SelectByName(name);
-                disconnect();
+                Disconnect();
 
                 return applications.Count() > 0 ? applications[0].Id : -1;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
-                return -1;
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
             }
         }
 
-
-        //Store a new Apllication and their values in the database
         public bool Store(Application value)
         {
-            string sql = "INSERT INTO applications VALUES(@Name, @Creation_dt)";
+            string sql = "INSERT INTO applications VALUES(@name, @creation_dt)";
 
             try
             {
+                Connect();
 
-                connect();
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
-                cmd.Parameters.AddWithValue("@Name", value.Name);
-                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
+                cmd.Parameters.AddWithValue("@name", value.Name);
+                cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now);
 
-                int numRegistos = InsertOrUpdate(cmd);
+                int n = InsertOrUpdate(cmd);
                 
-                if (numRegistos > 0)
-                {
-                    disconnect();
-                    return true;
-                }
-                disconnect();
-                return false;
+                Disconnect();
+
+                return n > 0;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open)
-                    disconnect();
-                return false;
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
             }
         }
 
@@ -124,124 +107,56 @@ namespace SOMIOD.Controllers
 
             try
             {
-                connect();
+                Connect();
 
                 SqlCommand cmd = new SqlCommand(update_query, conn);
+
                 cmd.Parameters.AddWithValue("@id", id);
                 cmd.Parameters.AddWithValue("@name", value.Name);
                 cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now);
-                int rows = InsertOrUpdate(cmd);
+                
+                int n = InsertOrUpdate(cmd);
 
-                disconnect();
+                Disconnect();
 
-                return rows > 0;
+                return n > 0;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
-                return false;
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
             }
         }
 
-        //Add a reference to an Application in the Module database table
-        public int AddModule(int id_app, int id_module)
-        {
-            string sql = "INSERT INTO modules VALUES (@parent) WHERE id=@IdApp";
-            //SqlConnection conn = null;
-            try
-            {
-                /*
-                conn = new SqlConnection(connectionString);
-                conn.Open();
-                */
-                connect();
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@idApp", id_app);
-                cmd.Parameters.AddWithValue("@parent", id_module);
-                int numRegistos = InsertOrUpdate(cmd);
-                disconnect();
-              //  int numRegistos = cmd.ExecuteNonQuery();
-               // conn.Close();
-                if (numRegistos == 1)
-                {
-                    return 1;
-                }
-                return -1;
-            }
-            catch (Exception)
-            {
-                if (conn.State == System.Data.ConnectionState.Open)
-                    //conn.Close();
-                    disconnect();
-                return -1;
-            }
-        }
-        //Remove a reference to an Application in the Module database table
-
-        public int RemoveModule(int id_app, int id_module)
-        {
-            string sql = "DELETE FROM modules VALUES (@parent) WHERE id=@IdApp";
-            //SqlConnection conn = null;
-            try
-            {
-                conn = new SqlConnection(connectionString);
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@idApp", id_app);
-                cmd.Parameters.AddWithValue("@parent", id_module);
-                int numRegistos = InsertOrUpdate(cmd);
-                //int numRegistos = cmd.ExecuteNonQuery();
-                //conn.Close();
-                disconnect();
-                if (numRegistos == 1)
-                {
-                    return 1;
-                }
-                return -1;
-            }
-            catch (Exception)
-            {
-                if (conn.State == System.Data.ConnectionState.Open)
-                    //conn.Close();
-                    disconnect();
-                return -1;
-            }
-
-
-        }
-
-        //Delete an application from database
         public bool DeleteApplication(int id)
         {
             try
             {
-                connect();
-                setSqlComand("DELETE FROM applications WHERE Id=@id");
+                Connect();
+                SetSqlComand("DELETE FROM applications WHERE Id=@id");
+                int n = Delete(id);
+                Disconnect();
 
-                int numRegistos = Delete(id);
-                
-                disconnect();
-
-                return numRegistos == 1;
+                return n == 1;
             }
-            catch (Exception)
-            {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
-                return false;
+            catch (Exception exception) { 
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect(); 
+                throw exception; 
             }
         }
 
-        public override void readerIterator(SqlDataReader reader)
+        public override void ReaderIterator(SqlDataReader reader)
         {
             while (reader.Read())
             {
                 Application application = new Application
                 {
-                    Id = (int)reader["Id"],
-                    Name = (string)reader["Name"],
-                    Creation_dt = (DateTime)reader["Creation_dt"],
+                    Id = (int) reader["Id"],
+                    Name = (string) reader["Name"],
+                    Creation_dt = (DateTime) reader["Creation_dt"],
                 };
-                this.applications.Add(application);
+
+                applications.Add(application);
             }
         }
     }
