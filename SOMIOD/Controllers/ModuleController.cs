@@ -103,14 +103,14 @@ namespace SOMIOD.Controllers
             }
         }
 
-        public bool UpdateModule(Module module)
+        public bool UpdateModule(Module module, int id)
         {
             try
             {
                 connect();
                 string sql = "UPDATE modules SET Id = @Id, Name = @Name, Creation_date = @Creation_date, Parent = @Parent WHERE id = @id";
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@Id", module.Id);
+                cmd.Parameters.AddWithValue("@Id", id);
                 cmd.Parameters.AddWithValue("@Name", module.Name);
                 cmd.Parameters.AddWithValue("@Creation_dt", module.Creation_dt);
                 cmd.Parameters.AddWithValue("@Parent", module.Parent);

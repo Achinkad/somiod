@@ -18,7 +18,7 @@ namespace SOMIOD.Controllers
     {   
         /* --- APPLICATION API ROUTES --- */
         
-        // GET: api/somiod/applications -> Get all applications
+        // GET: api/somiod/applications -> Get all applications 
         [HttpGet, Route("api/somiod/applications")]
         public IHttpActionResult GetApplications([FromBody] Application value)
         {
@@ -68,7 +68,7 @@ namespace SOMIOD.Controllers
                 ApplicationController app = new ApplicationController();
                 bool response = app.Store(value);
                 if (!response) return BadRequest("Operation Failed");
-                return Ok(response);
+                return Ok("A new application was stored with success!");
             }
             catch (Exception exception)
             {
@@ -78,7 +78,7 @@ namespace SOMIOD.Controllers
 
         // PUT: api/somiod/applications/{id} -> Update an Application
         [HttpPut, Route("api/somiod/applications/{id}")]
-        public IHttpActionResult PutApplication([FromBody] Application value)
+        public IHttpActionResult PutApplication(int id, [FromBody] Application value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
             if (value.Res_type != "application") return BadRequest("Request type is different from 'application'.");
@@ -86,9 +86,9 @@ namespace SOMIOD.Controllers
             try
             {
                 ApplicationController app = new ApplicationController();
-                bool response = app.Update(value);
+                bool response = app.Update(value, id);
                 if (!response) return BadRequest("Operation Failed");
-                return Ok(response);
+                return Ok("Application was updated successfully!");
             }
             catch (Exception exception)
             {
@@ -98,7 +98,7 @@ namespace SOMIOD.Controllers
 
         // DELETE: api/somiod/applications/{id} -> Deletes an Application
         [HttpDelete, Route("api/somiod/applications/{id}")]
-        public IHttpActionResult DeleteApplication([FromBody] Application value)
+        public IHttpActionResult DeleteApplication(int id, [FromBody] Application value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
             if (value.Res_type != "application") return BadRequest("Request type is different from 'application'.");
@@ -106,9 +106,9 @@ namespace SOMIOD.Controllers
             try
             {
                 ApplicationController app = new ApplicationController();
-                bool response = app.DeleteApplication(value.Id);
+                bool response = app.DeleteApplication(id);
                 if (!response) return BadRequest("Operation Failed");
-                return Ok(response);
+                return Ok("Application was deleted successfully!");
             }
             catch (Exception exception)
             {
@@ -139,7 +139,7 @@ namespace SOMIOD.Controllers
 
         // GET: api/somiod/modules/{id} -> Gets a module
         [HttpGet, Route("api/somiod/modules/{id}")]
-        public IHttpActionResult GetModuleById([FromBody] Module value)
+        public IHttpActionResult GetModuleById(int id, [FromBody] Module value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
             if (value.Res_type != "module") return BadRequest("Request type is different from 'module'.");
@@ -147,7 +147,7 @@ namespace SOMIOD.Controllers
             try
             {
                 ModuleController module = new ModuleController();
-                Module response = module.GetModule(value.Id);
+                Module response = module.GetModule(id);
                 return Ok(response);
             }
             catch (Exception exception)
@@ -164,14 +164,14 @@ namespace SOMIOD.Controllers
             if (value.Res_type != "module") return BadRequest("Request type is different from 'module'.");
 
             ApplicationController application = new ApplicationController();
-            if (application.GetApplicationByName(application_name)) return BadRequest("The application does not exist.");
+            if (application.GetApplicationByName(application_name)) return BadRequest("The application '" + application_name + "' does not exist.");
 
             try
             {
                 ModuleController module = new ModuleController();
                 bool response = module.Store(value);
                 if (!response) return BadRequest("Operation Failed");
-                return Ok();
+                return Ok("A new Module was stored with success!");
             }
             catch (Exception exception)
             {
@@ -181,7 +181,7 @@ namespace SOMIOD.Controllers
 
         // PUT: api/somiod/modules/{id} -> Update a Module
         [HttpPut, Route("api/somiod/modules/{id}")]
-        public IHttpActionResult PutModule([FromBody] Module value)
+        public IHttpActionResult PutModule(int id, [FromBody] Module value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
             if (value.Res_type != "module") return BadRequest("Request type is different from 'module'.");
@@ -189,9 +189,9 @@ namespace SOMIOD.Controllers
             try
             {
                 ModuleController module = new ModuleController();
-                bool response = module.UpdateModule(value);
+                bool response = module.UpdateModule(value, id);
                 if (!response) return BadRequest("Operation Failed");
-                return Ok(response);
+                return Ok("Module was updated successfully!");
             }
             catch (Exception exception)
             {
@@ -201,7 +201,7 @@ namespace SOMIOD.Controllers
 
         // DELETE: api/somiod/modules/{id} -> Deletes a Module
         [HttpDelete, Route("api/somiod/modules/{id}")]
-        public IHttpActionResult DeleteModule([FromBody] Module value)
+        public IHttpActionResult DeleteModule(int id, [FromBody] Module value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
             if (value.Res_type != "module") return BadRequest("Request type is different from 'module'.");
@@ -209,9 +209,9 @@ namespace SOMIOD.Controllers
             try
             {
                 ModuleController module = new ModuleController();
-                bool response = module.DeleteModule(value.Id);
+                bool response = module.DeleteModule(id);
                 if (!response) return BadRequest("Operation Failed");
-                return Ok(response);
+                return Ok("Module was deleted successfully!");
             }
             catch (Exception exception)
             {
@@ -267,7 +267,7 @@ namespace SOMIOD.Controllers
 
         // DELETE: api/somiod/datas/{id} -> Deletes a Data Resource
         [HttpDelete, Route("api/somiod/datas/{id}")]
-        public IHttpActionResult DeleteData([FromBody] Data value)
+        public IHttpActionResult DeleteData(int id, [FromBody] Data value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
             if (value.Res_type != "data") return BadRequest("Request type is different from 'data'.");
@@ -275,9 +275,9 @@ namespace SOMIOD.Controllers
             try
             {
                 DataController data = new DataController();
-                bool response = data.DeleteData(value.Id);
+                bool response = data.DeleteData(id);
                 if (!response) return BadRequest("Operation Failed");
-                return Ok(response);
+                return Ok("Data was deleted successfully!");
             }
             catch (Exception exception)
             {
@@ -287,7 +287,7 @@ namespace SOMIOD.Controllers
 
         // DELETE: api/somiod/subscriptions/{id} -> Deletes a Subscription Resource
         [HttpDelete, Route("api/somiod/subscriptions/{id}")]
-        public IHttpActionResult DeleteSubscription([FromBody] Subscription value)
+        public IHttpActionResult DeleteSubscription(int id, [FromBody] Subscription value)
         {
             if (value == null) return BadRequest("Please provide the required information for this request.");
             if (value.Res_type != "subscription") return BadRequest("Request type is different from 'subscription'.");
@@ -295,9 +295,9 @@ namespace SOMIOD.Controllers
             try
             {
                 SubscriptionController subscription = new SubscriptionController();
-                bool response = subscription.DeleteSubcription(value.Id);
+                bool response = subscription.DeleteSubcription(id);
                 if (!response) return BadRequest("Operation Failed");
-                return Ok(response);
+                return Ok("Subscription was deleted successfully!");
             }
             catch (Exception exception)
             {

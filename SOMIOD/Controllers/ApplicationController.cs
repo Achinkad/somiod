@@ -116,7 +116,7 @@ namespace SOMIOD.Controllers
             }
         }
 
-        public bool Update(Application value)
+        public bool Update(Application value, int id)
         {
             string update_query = "UPDATE applications SET name = @name, creation_dt = @creation_dt WHERE Id = @id";
 
@@ -125,6 +125,7 @@ namespace SOMIOD.Controllers
                 connect();
 
                 SqlCommand cmd = new SqlCommand(update_query, conn);
+                cmd.Parameters.AddWithValue("@id", id);
                 cmd.Parameters.AddWithValue("@name", value.Name);
                 cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now);
                 int rows = InsertOrUpdate(cmd);
