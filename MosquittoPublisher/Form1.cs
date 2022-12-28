@@ -8,9 +8,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 using uPLibrary.Networking.M2Mqtt;
 
 
@@ -41,8 +45,22 @@ namespace MosquittoPublisher
 
             var response_GET = await client.GetAsync("http://localhost:53818/api/somiod/applications");
             var responseString_GET = await response_GET.Content.ReadAsStringAsync();
-            MessageBox.Show(responseString_GET);
 
+            List<string> app_names = new List<string>();
+            
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(responseString_GET);
+
+            XmlNodeList nodes = xmlDoc.SelectNodes("//*[local-name() = 'Name']");
+            
+            
+            foreach (XmlNode node in nodes)
+            {
+                app_names.Add(node.InnerText);
+                MessageBox.Show(node.InnerText);
+               
+            }
+            
             ///////////////////////////////////////////
         }
 
