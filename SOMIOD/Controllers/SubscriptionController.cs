@@ -69,7 +69,16 @@ namespace SOMIOD.Controllers
             subscriptions = new List<Subscription>();
             while (reader.Read())
             {
-                Subscription subscription = null;
+                Subscription subscription = new Subscription
+                {
+                    Id = (int)reader["id"],
+                    Name = (string)reader["name"],
+                    Creation_dt = reader["Creation_dt"].ToString(),
+                    Parent = (int)reader["parent"],
+                    Event = (string)reader["event"],
+                    Endpoint = (string)reader["endpoint"],
+                };
+
                 subscriptions.Add(subscription);
             }
         }

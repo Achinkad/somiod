@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using System.Web.Services.Description;
 using System.Xml.Linq;
 using SOMIOD.Models;
 
@@ -149,13 +150,11 @@ namespace SOMIOD.Controllers
         {
             while (reader.Read())
             {
-                string date = (string)reader["Creation_dt"];
-                Console.WriteLine(date);
                 Application application = new Application
                 {
                     Id = (int) reader["Id"],
                     Name = (string) reader["Name"],
-                    Creation_dt = (DateTime) reader["Creation_dt"],
+                    Creation_dt = reader["Creation_dt"].ToString(),
                 };
 
                 applications.Add(application);

@@ -109,7 +109,7 @@ namespace SOMIOD.Controllers
                     Id = (int) reader["Id"],
                     Content = (string) reader["Content"],
                     Parent = (int) reader["Parent"],
-                    Creation_dt = new DateTime(),
+                    Creation_dt = reader["Creation_dt"].ToString(),
                 };
 
                 data_list.Add(data);
