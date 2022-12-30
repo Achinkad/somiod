@@ -147,11 +147,11 @@ namespace MosquittoSubscriber
                                                                    );
 
                             var response_subscription = await client.PostAsync("http://localhost:53818/api/somiod/" + textBoxApp.Text.ToLower() + "/" + textBoxModule.Text.ToLower(), content_subscription);
-                            
 
-                           // var responseString_subscription = await response_subscription.Content.ReadAsStringAsync();
 
-   
+                        // var responseString_subscription = await response_subscription.Content.ReadAsStringAsync();
+
+                        MessageBox.Show("DONE!");
 
                     }
                     else
