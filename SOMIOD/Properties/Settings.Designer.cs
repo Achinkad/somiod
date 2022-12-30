@@ -26,8 +26,9 @@ namespace SOMIOD.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Bruno\\Desktop\\ESCOLA" +
-            "\\DOCS\\2022_2023\\IS\\pratica\\projeto_grupo\\SOMIOD\\SOMIOD\\App_Data\\SOMIOD_BD.mdf;")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\HOME-AMD\\Documents\\_" +
+            "UNI\\IS\\SOMIOD\\SOMIOD\\App_Data\\SOMIOD_BD.mdf;Integrated Security=True")]
+            
         public string ConnStr {
             get {
                 return ((string)(this["ConnStr"]));

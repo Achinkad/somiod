@@ -52,7 +52,7 @@ namespace SOMIOD.Controllers
             try
             {
                 Connect();
-                SetSqlComand("DELETE FROM Subscription WHERE id = @id");
+                SetSqlComand("DELETE FROM subscriptions WHERE id = @id");
                 int numRow = Delete(id);
                 Disconnect();
                 return numRow == 1;

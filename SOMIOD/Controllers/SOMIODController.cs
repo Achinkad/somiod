@@ -235,6 +235,7 @@ namespace SOMIOD.Controllers
             {
                 case "data":
                     if (request_type != "data") return BadRequest("Request type is different from 'data'.");
+                    if (request["event"].ToString() != "creation") return BadRequest("Event type is different from 'creation' for this route.");
 
                     try
                     {
