@@ -30,7 +30,6 @@ namespace MosquittoSubscriber
             status = Encoding.UTF8.GetString(e.Message);
 
             
-
             
             if (status == "on")
             {
@@ -68,85 +67,92 @@ namespace MosquittoSubscriber
 
        async private void button1_Click(object sender, EventArgs e)
         {
-            if (textBoxApp.SelectedText!=null)
+            if (textBoxApp.Text!= string.Empty)
             {
-                if (textBoxModule.SelectedText!=null)
+                if (textBoxModule.Text!= string.Empty)
                 {
-                    if (textBoxSub.SelectedText!=null)
+                    if (textBoxSub.Text!= string.Empty)
                     {
                         //////////////POST DO APPLICATION
+                        
 
-                        var values_app = new Dictionary<string, string>
-                          {
-                              { "res_type", "application" },
-                              { "name", textBoxApp.Text }
-                          };
+                        
+                            var values_app = new Dictionary<string, string>
+                              {
+                                  { "res_type", "application" },
+                                  { "name", textBoxApp.Text }
+                              };
 
-                        var content_app = new StringContent(
-                                                              JsonConvert.SerializeObject(values_app),
-                                                               System.Text.Encoding.UTF8,
-                                                               "application/json"
-                                                               );
+                            var content_app = new StringContent(
+                                                                  JsonConvert.SerializeObject(values_app),
+                                                                   System.Text.Encoding.UTF8,
+                                                                   "application/json"
+                                                                   );
 
-                        var response_app = await client.PostAsync("http://localhost:53818/api/somiod/", content_app);
+                            var response_app = await client.PostAsync("http://localhost:53818/api/somiod/", content_app);
+                          
 
-                        var responseString_app = await response_app.Content.ReadAsStringAsync();
+                          //  var responseString_app = await response_app.Content.ReadAsStringAsync();
 
-                        MessageBox.Show("app:"+responseString_app);
+                            
 
 
                         /////////////SUBSCRIBE CHANNEL
 
-                        
+
                         byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE };
                         string[] mStrTopicsInfo = { textBoxModule.Text };
 
                       
                         mClient.Subscribe(mStrTopicsInfo, qosLevels);
-                        
+
 
                         //////////////POST DO MODULE
-                        var values_module = new Dictionary<string, string>
-                          {
-                              { "res_type", "module" },
-                              { "name", textBoxModule.Text }
-                          };
+                       
+                              var values_module = new Dictionary<string, string>
+                              {
+                                  { "res_type", "module" },
+                                  { "name", textBoxModule.Text }
+                              };
 
-                        var content_module = new StringContent(
-                                                              JsonConvert.SerializeObject(values_module),
-                                                               System.Text.Encoding.UTF8,
-                                                               "application/json"
-                                                               );
+                            var content_module = new StringContent(
+                                                                  JsonConvert.SerializeObject(values_module),
+                                                                   System.Text.Encoding.UTF8,
+                                                                   "application/json"
+                                                                   );
 
-                        var response_module = await client.PostAsync("http://localhost:53818/api/somiod/" + textBoxApp.Text.ToLower(), content_module);
+                            var response_module = await client.PostAsync("http://localhost:53818/api/somiod/" + textBoxApp.Text.ToLower(), content_module);
+                            
 
-                        var responseString_module = await response_module.Content.ReadAsStringAsync();
+                           // var responseString_module = await response_module.Content.ReadAsStringAsync();
 
-                        MessageBox.Show("module:"+responseString_module);
-
-                        //////////////POST DO SUBSCRIPTION
-
-                        var values_subscription = new Dictionary<string, string>
-                          {
-                              { "res_type", "subscription" },
-                              { "name", textBoxSub.Text },
-                              { "event", "creation" }, //depois ver isto(poder escolher entre creation e deletion)
-                              { "endpoint", "127.0.0.1" }
-                          };
-
-                        var content_subscription = new StringContent(
-                                                              JsonConvert.SerializeObject(values_subscription),
-                                                               System.Text.Encoding.UTF8,
-                                                               "application/json"
-                                                               );
-
-                        var response_subscription = await client.PostAsync("http://localhost:53818/api/somiod/" + textBoxApp.Text.ToLower() + "/" + textBoxModule.Text.ToLower(), content_subscription);
-
-                        var responseString_subscription = await response_subscription.Content.ReadAsStringAsync();
-
-                        MessageBox.Show("sub:"+responseString_subscription);
+                            
 
                        
+                        //////////////POST DO SUBSCRIPTION
+
+                      
+                            var values_subscription = new Dictionary<string, string>
+                              {
+                                  { "res_type", "subscription" },
+                                  { "name", textBoxSub.Text },
+                                  { "event", "creation" }, //depois ver isto(poder escolher entre creation e deletion)
+                                  { "endpoint", "127.0.0.1" }
+                              };
+
+                            var content_subscription = new StringContent(
+                                                                  JsonConvert.SerializeObject(values_subscription),
+                                                                   System.Text.Encoding.UTF8,
+                                                                   "application/json"
+                                                                   );
+
+                            var response_subscription = await client.PostAsync("http://localhost:53818/api/somiod/" + textBoxApp.Text.ToLower() + "/" + textBoxModule.Text.ToLower(), content_subscription);
+                            
+
+                           // var responseString_subscription = await response_subscription.Content.ReadAsStringAsync();
+
+   
+
                     }
                     else
                     {

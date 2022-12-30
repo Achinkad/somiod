@@ -28,176 +28,178 @@ namespace MosquittoPublisher
     {
         
         private static readonly HttpClient client = new HttpClient();
+        List<string> app_names = new List<string>();
+        List<string> app_ids = new List<string>();
         public Form1()
         {
             InitializeComponent();
             
         }
 
-       async private void Form1_Load(object sender, EventArgs e)
-        {
-
-
-            //POST DO MODULE LIGHT_COMMAND
-
-            var values_module = new Dictionary<string, string>
-              {
-                  { "res_type", "module" },
-                  { "name", "light_command" }
-              };
-
-            var content_module = new StringContent(
-                                                  JsonConvert.SerializeObject(values_module),
-                                                   System.Text.Encoding.UTF8,
-                                                   "application/json"
-                                                   );
-
-            var response_module = await client.PostAsync("http://localhost:53818/api/somiod/lightning", content_module);
-
-            var responseString_module = await response_module.Content.ReadAsStringAsync();
-
-            MessageBox.Show(responseString_module);
-
-
-            ///////////////////////////////////////////
-        }
 
        async private void button1_Click(object sender, EventArgs e)
-        {
-            /*
+        { 
+            
             if(comboBox1.SelectedItem!=null)
             {
-                
-
-            }
-            else
-            {
-                MessageBox.Show("First Choose a Application!");
-            }
-            */
-
-            //POST DO DATA ON
-            var values_data = new Dictionary<string, string>
-              {
-                  { "res_type", "data" },
-                  { "content", "on" }
-              };
-
-            var content_data = new StringContent(
-                                                  JsonConvert.SerializeObject(values_data),
-                                                   System.Text.Encoding.UTF8,
-                                                   "application/json"
-                                                   );
-
-            var response_data = await client.PostAsync("http://localhost:53818/api/somiod/lightning/light_bulb", content_data);
-
-            var responseString_data = await response_data.Content.ReadAsStringAsync();
-
-            //MessageBox.Show(responseString_module);
-
-        }
-
-       async private void button2_Click(object sender, EventArgs e)
-        {
-            /*
-            if (comboBox1.SelectedItem != null)
-            {
-                if (textBox1.Text!=null)
+                if (comboBox2.SelectedItem!=null)
                 {
+                    if (textBoxCommModule.Text!=string.Empty)
+                    {
+                        if (textBoxComm.Text!= string.Empty)
+                        {
+                            MessageBox.Show(textBoxComm.Text);
+                            MessageBox.Show(textBoxCommModule.Text);
+                            /////////POST DO DATA ON
+                            var values_data = new Dictionary<string, string>
+                              {
+                                  { "res_type", "data" },
+                                  { "content", textBoxComm.Text }
+                              };
 
+                            var content_data = new StringContent(
+                                                                  JsonConvert.SerializeObject(values_data),
+                                                                   System.Text.Encoding.UTF8,
+                                                                   "application/json"
+                                                                   );
+
+                            var response_data = await client.PostAsync("http://localhost:53818/api/somiod/"+ comboBox1.SelectedItem.ToString().ToLower()+"/"+ comboBox2.SelectedItem.ToString().ToLower(), content_data);
+
+                            //var responseString_data = await response_data.Content.ReadAsStringAsync();
+
+                           
+
+                            /////////POST DO MODULE COMMAND
+
+                            var values_module = new Dictionary<string, string>
+                          {
+                              { "res_type", "module" },
+                              { "name", textBoxCommModule.Text }
+                          };
+
+                            var content_module = new StringContent(
+                                                                  JsonConvert.SerializeObject(values_module),
+                                                                   System.Text.Encoding.UTF8,
+                                                                   "application/json"
+                                                                   );
+
+                            var response_module = await client.PostAsync("http://localhost:53818/api/somiod/" + comboBox1.SelectedItem.ToString().ToLower(), content_module);
+
+                            //var responseString_module = await response_module.Content.ReadAsStringAsync();
+
+
+                            MessageBox.Show("DONE!");
+
+                        }
+                        else
+                        {
+                            MessageBox.Show("Write the command  name!");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Write the command Module name!");
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Write the name of the Module!");
+                    MessageBox.Show("Choose a Module!");
                 }
-                
-                
+
             }
             else
             {
-                MessageBox.Show("First Choose a Application!");
+                MessageBox.Show("Choose a Application!");
             }
-            */
-
-            //POST DO DATA OFF
-            var values_data = new Dictionary<string, string>
-              {
-                  { "res_type", "data" },
-                  { "content", "off" }
-              };
-
-            var content_data = new StringContent(
-                                                  JsonConvert.SerializeObject(values_data),
-                                                   System.Text.Encoding.UTF8,
-                                                   "application/json"
-                                                   );
-
-            var response_data = await client.PostAsync("http://localhost:53818/api/somiod/lightning/light_bulb", content_data);
-
-            var responseString_data = await response_data.Content.ReadAsStringAsync();
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
+            
+  
 
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
        async private void comboBox1_Click(object sender, EventArgs e)
         {
             //GET PARA O DROPDOWN DOS APPS
-
+            
             var response_GET = await client.GetAsync("http://localhost:53818/api/somiod/applications");
             var responseString_GET = await response_GET.Content.ReadAsStringAsync();
 
-            List<string> app_names = new List<string>();
+            
 
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(responseString_GET);
 
-            XmlNodeList nodes = xmlDoc.SelectNodes("//*[local-name() = 'Name']");
+            XmlNodeList nodes_name = xmlDoc.SelectNodes("//*[local-name() = 'Name']");
+            XmlNodeList nodes_id = xmlDoc.SelectNodes("//*[local-name() = 'Id']");
 
+           
 
-            foreach (XmlNode node in nodes)
+            app_names.Clear();
+
+            foreach (XmlNode node in nodes_name)
             {
                 app_names.Add(node.InnerText);
 
-
             }
+
+
+            app_ids.Clear();
+            foreach (XmlNode node in nodes_id)
+            {
+                app_ids.Add(node.InnerText);
+   
+            }
+
             comboBox1.Items.Clear();
             foreach (String name in app_names)
             {
                 comboBox1.Items.Add(name);
             }
+
         }
 
         private void comboBox2_Click(object sender, EventArgs e)
         {
 
         }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+       async private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //GET PARA O DROPDOWN DOS MODULES
+            //MessageBox.Show(comboBox1.SelectedIndex.ToString());
+            var response_GET = await client.GetAsync("http://localhost:53818/api/somiod/applications/"+ app_ids[comboBox1.SelectedIndex] + "/modules");
+            var responseString_GET = await response_GET.Content.ReadAsStringAsync();
+
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(responseString_GET);
+
+            XmlNodeList nodes_name = xmlDoc.SelectNodes("//*[local-name() = 'Name']");
+
+            List<string> module_names = new List<string>();
+
+            module_names.Clear();
+
+            foreach (XmlNode node in nodes_name)
+            {
+                module_names.Add(node.InnerText);
+
+            }
+
+            comboBox2.Items.Clear();
+            foreach (String name in module_names)
+            {
+                comboBox2.Items.Add(name);
+            }
+
+            
+        }
+
+       
     }
 }

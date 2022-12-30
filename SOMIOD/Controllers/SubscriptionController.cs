@@ -10,49 +10,11 @@ namespace SOMIOD.Controllers
     public class SubscriptionController : DatabaseConnection
     {
         private List<Subscription> subscriptions;
-        private List<string> valid_events = new List<string>() { "creation", "deletion" };
+        private readonly List<string> valid_events = new List<string>() { "creation", "deletion" };
 
         public SubscriptionController()
         {
             subscriptions = new List<Subscription>();
-        }
-
-        public List<Subscription> GetModules()
-        {
-            List<Module> modules = new List<Module>();
-
-            setSqlComand("SELECT * FROM Subscription ORDER BY Id");
-            
-            try
-            {
-                connect();
-                Select();
-                disconnect();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-            return new List<Subscription>(subscriptions);
-        }
-
-        public Subscription GetSubcription(int id)
-        {
-            try
-            {
-                connect();
-                setSqlComand("SELECT * FROM Subscription WHERE Id=@idProd");
-                Select(id);
-                disconnect();
-                return subscriptions?[0] ?? null;
-
-            }
-            catch (Exception)
-            {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
-                return null;
-            }
         }
 
         public bool Store(Subscription subscription, int parent_id)
@@ -62,66 +24,26 @@ namespace SOMIOD.Controllers
 
             try
             {
-                connect();
-
-                string sql = "INSERT INTO subscriptions VALUES (@Name, @Creation_dt, @Event, @Endpoint, @Parent)";
-
+                Connect();
+                string sql = "INSERT INTO subscriptions VALUES (@name, @creation_dt, @event, @endpoint, @parent)";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 
-                cmd.Parameters.AddWithValue("@Name", subscription.Name);
-                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
-                cmd.Parameters.AddWithValue("@Parent", parent_id);
-                cmd.Parameters.AddWithValue("@Event", subscription.Event);
-                cmd.Parameters.AddWithValue("@Endpoint", subscription.Endpoint);
-                
-                setSqlComand(sql);
+                cmd.Parameters.AddWithValue("@name", subscription.Name);
+                cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now);
+                cmd.Parameters.AddWithValue("@event", subscription.Event);
+                cmd.Parameters.AddWithValue("@endpoint", subscription.Endpoint);
+                cmd.Parameters.AddWithValue("@parent", parent_id);
 
+                SetSqlComand(sql);
                 int numRow = InsertOrUpdate(cmd);
-                
-                disconnect();
+                Disconnect();
 
                 return numRow == 1;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
-                return false;
-            }
-        }
-
-        public bool UpdateSubcription(Subscription subscription)
-        {
-            // Check if Event String is "Creation" or "Deletion"
-            if (!valid_events.Any(s => s.Contains(subscription.Event))) return false;
-
-            try
-            {
-                connect();
-                
-                string sql = "UPDATE subscriptions SET Name = @Name, Creation_date = @Creation_date, Parent = @Parent, Event = @Event, Endpoint = @Endpoint  WHERE id = @id";
-                
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                
-                cmd.Parameters.AddWithValue("@id", subscription.Id);
-                cmd.Parameters.AddWithValue("@Name", subscription.Name);
-                cmd.Parameters.AddWithValue("@Creation_dt", subscription.Creation_dt);
-                cmd.Parameters.AddWithValue("@Parent", subscription.Parent);
-                cmd.Parameters.AddWithValue("@Event", subscription.Event);
-                cmd.Parameters.AddWithValue("@Endpoint", subscription.Endpoint);
-                
-                setSqlComand(sql);
-
-                int numRow = InsertOrUpdate(cmd);
-
-                disconnect();
-
-                return numRow == 1 ? true : false;
-
-            }
-            catch (Exception)
-            {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
-                return false;
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
             }
         }
 
@@ -129,25 +51,34 @@ namespace SOMIOD.Controllers
         {
             try
             {
-                connect();
-                setSqlComand("DELETE FROM Subscription WHERE id = @id");
+                Connect();
+                SetSqlComand("DELETE FROM Subscription WHERE id = @id");
                 int numRow = Delete(id);
-                disconnect();
-                return numRow == 1 ? true : false;
+                Disconnect();
+                return numRow == 1;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
-                return false;
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
             }
         }
 
-        public override void readerIterator(SqlDataReader reader)
+        public override void ReaderIterator(SqlDataReader reader)
         {
             subscriptions = new List<Subscription>();
             while (reader.Read())
             {
-                Subscription subscription = null;
+                Subscription subscription = new Subscription
+                {
+                    Id = (int)reader["id"],
+                    Name = (string)reader["name"],
+                    Creation_dt = reader["Creation_dt"].ToString(),
+                    Parent = (int)reader["parent"],
+                    Event = (string)reader["event"],
+                    Endpoint = (string)reader["endpoint"],
+                };
+
                 subscriptions.Add(subscription);
             }
         }

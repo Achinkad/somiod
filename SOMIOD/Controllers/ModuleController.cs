@@ -16,56 +16,65 @@ namespace SOMIOD.Controllers
 
         private List<Module> modules;
 
-        public ModuleController() { 
+        public ModuleController() 
+        { 
             this.modules = new List<Module>();
         }
 
-        public List<Module> GetModules() {
-
+        public List<Module> GetModules() 
+        {
             List<Module> modules = new List<Module>();
-            setSqlComand("SELECT * FROM modules ORDER BY Id");
+            SetSqlComand("SELECT * FROM modules ORDER BY Id");
+
             try
             {
-                connect();
+                Connect();
                 Select();
-                disconnect();
-
+                Disconnect();
             }
-            catch (Exception e) 
+            catch (Exception exception) 
             {
-                return null;
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
             }
 
-            //TODO: É necessário converter os objetos para JSON
             return new List<Module>(this.modules);
-            //return JsonSerializer.Serialize(new List<Module>(this.modules));
+        }
+
+        public List<Module> GetModulesByApplication(int id)
+        {
+            List<Module> modules = new List<Module>();
+            SetSqlComand("SELECT * FROM modules WHERE parent = @id ORDER BY Id");
+
+            try
+            {
+                Connect();
+                Select(id);
+                Disconnect();
+            }
+            catch (Exception exception)
+            {
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
+            }
+
+            return new List<Module>(this.modules);
         }
 
         public Module GetModule(int id)
         {
             try
             {
-                connect();
-                setSqlComand("SELECT * FROM modules WHERE Id=@id");
+                Connect();
+                SetSqlComand("SELECT * FROM modules WHERE Id = @id");
                 Select(id);
-                disconnect();
-
-                if (this.modules[0] == null)
-                {
-                    return null;
-                }
-                return this.modules[0];
-
+                Disconnect();
+                return modules.Count() > 0 ? modules[0] : null;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                //fechar ligação à DB
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    disconnect();
-                }
-                return null;
-                //return BadRequest();
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
             }
         }
 
@@ -73,45 +82,45 @@ namespace SOMIOD.Controllers
         {
             try
             {
-                connect();
-                setSqlComand("SELECT * FROM modules WHERE name = @name");
+                Connect();
+                SetSqlComand("SELECT * FROM modules WHERE name = @name");
                 SelectByName(name);
-                disconnect();
+                Disconnect();
 
                 return modules.Count() > 0 ? modules[0].Id : -1;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
-                return -1;
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
             }
         }
 
-        public bool Store(Module module, int parent_id) {
+        public bool Store(Module module, int parent_id) 
+        {
             try
             {
-                connect();
+                Connect();
 
-                string sql = "INSERT INTO modules VALUES (@Name, @Creation_dt, @Parent)";
+                string sql = "INSERT INTO modules VALUES (@name, @creation_dt, @parent)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
-                cmd.Parameters.AddWithValue("@Name", module.Name);
-                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
-                cmd.Parameters.AddWithValue("@Parent", parent_id);
+                cmd.Parameters.AddWithValue("@name", module.Name);
+                cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now);
+                cmd.Parameters.AddWithValue("@parent", parent_id);
 
-                setSqlComand(sql);
+                SetSqlComand(sql);
 
-                int numRow = InsertOrUpdate(cmd);
+                int n = InsertOrUpdate(cmd);
                 
-                disconnect();
+                Disconnect();
 
-                return numRow == 1;
+                return n == 1;
             }
-            catch (Exception)
-            {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
-                return false;
+            catch (Exception exception) { 
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect(); 
+                throw exception; 
             }
         }
 
@@ -119,60 +128,58 @@ namespace SOMIOD.Controllers
         {
             try
             {
-                connect();
+                Connect();
                
-                string sql = "UPDATE modules SET name = @Name, creation_dt = @Creation_dt WHERE id = @id"; 
-                
+                string sql = "UPDATE modules SET name = @name, creation_dt = @creation_dt WHERE id = @id"; 
                 SqlCommand cmd = new SqlCommand(sql, conn);
-
+                cmd.Parameters.AddWithValue("@name", module.Name);
+                cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now);
                 cmd.Parameters.AddWithValue("@id", id);
-                cmd.Parameters.AddWithValue("@Name", module.Name);
-                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
-               
-                setSqlComand(sql);
 
-                int numRow = InsertOrUpdate(cmd);
+                SetSqlComand(sql);
+                int n = InsertOrUpdate(cmd);
+                Disconnect();
 
-                disconnect();
-                return numRow == 1;
+                return n == 1;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
-                return false;
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
             }
         }
 
-        public bool DeleteModule(int id) {
+        public bool DeleteModule(int id)
+        {
             try
             {
-                connect();
-                setSqlComand("DELETE FROM modules WHERE id = @id");
-                int numRow = Delete(id);
-                disconnect();
-
-                return numRow == 1;
+                Connect();
+                SetSqlComand("DELETE FROM modules WHERE id = @id");
+                int n = Delete(id);
+                Disconnect();
+                return n == 1;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
-                return false;
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
             }
         }
 
-        public override void readerIterator(SqlDataReader reader) {
-            this.modules = new List<Module>();
+        public override void ReaderIterator(SqlDataReader reader)
+        {
+            modules = new List<Module>();
             while (reader.Read())
             {
                 Module module = new Module
                 {
-                    Id=(int)reader["id"],
-                    Name=(string)reader["name"],
-                    Creation_dt = new DateTime(),//TODO: verificar data
-                    Parent = (int)reader["parent"],
+                    Id = (int) reader["id"],
+                    Name = (string) reader["name"],
+                    Creation_dt = reader["Creation_dt"].ToString(),
+                    Parent = (int) reader["parent"],
                 };
 
-                this.modules.Add(module);
+                modules.Add(module);
             }
         }
     }

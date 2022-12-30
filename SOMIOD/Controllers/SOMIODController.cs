@@ -124,6 +124,22 @@ namespace SOMIOD.Controllers
             }
         }
 
+        // GET: api/somiod/applications/{id}/modules -> Get all modules from an application
+        [HttpGet, Route("api/somiod/applications/{id}/modules")]
+        public IHttpActionResult GetModulesByApplication(int id)
+        {
+            try
+            {
+                ModuleController module = new ModuleController();
+                List<Module> response = module.GetModulesByApplication(id);
+                return Ok(response);
+            }
+            catch (Exception exception)
+            {
+                return InternalServerError(exception);
+            }
+        }
+
         // GET: api/somiod/modules/{id} -> Gets a module
         [HttpGet, Route("api/somiod/modules/{id}")]
         public IHttpActionResult GetModuleById(int id)

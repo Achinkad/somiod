@@ -13,128 +13,106 @@ namespace SOMIOD.Controllers
 
         public DataController()
         {
-            this.data_list = new List<Data>();
+            data_list = new List<Data>();
         }
-        //Select Aplications
+
         public List<Data> GetData()
         {
             List<Data> data_list = new List<Data>();
-            setSqlComand("SELECT * FROM data");
+            SetSqlComand("SELECT * FROM data");
 
             try
             {
-                connect();
+                Connect();
                 Select();
-                disconnect();  
-
+                Disconnect();  
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    disconnect();
-                }
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
             }
-            disconnect();
-            return new List<Data>(this.data_list);
+
+            return new List<Data>(data_list);
         }
 
         public Data GetData(int id)
         {
-            try {
-
-                connect();
-                setSqlComand("SELECT * FROM data WHERE Id=@id");
-                Select(id);
-                disconnect();
-
-                if (this.data_list[0] == null)
-                {
-                    return null;
-                }
-                return this.data_list[0];
-
-            }
-            catch (Exception)
+            try
             {
-                //fechar ligação à DB
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    disconnect();
-                }
-                return null;
-                //return BadRequest();
+                Connect();
+                SetSqlComand("SELECT * FROM data WHERE Id = @id");
+                Select(id);
+                Disconnect();
+
+                return data_list.Count() > 0 ? data_list[0] : null;
+            }
+            catch (Exception exception)
+            { 
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect(); 
+                throw exception; 
             }
         }
-
-        //Store a new Data and their values in the database
 
         public bool Store(Data value, int parent_id)
         {
             try
             {
-                connect();
+                Connect();
 
-                string sql = "INSERT INTO data VALUES(@Content, @Creation_dt, @Parent)";
+                string sql = "INSERT INTO data VALUES(@content, @creation_dt, @parent)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
-                cmd.Parameters.AddWithValue("@Creation_dt", DateTime.Now);
-                cmd.Parameters.AddWithValue("@Content", value.Content);
-                cmd.Parameters.AddWithValue("@Parent", parent_id);
+                cmd.Parameters.AddWithValue("@content", value.Content);
+                cmd.Parameters.AddWithValue("@creation_dt", DateTime.Now);
+                cmd.Parameters.AddWithValue("@parent", parent_id);
 
-                int numRow = InsertOrUpdate(cmd);
+                int n = InsertOrUpdate(cmd);
                 
-                disconnect();
+                Disconnect();
 
-                return numRow == 1;
-            } catch (Exception)
-            {
-                if (conn.State == System.Data.ConnectionState.Open) disconnect();
-                return false;
+                return n == 1;
+            } 
+            catch (Exception exception) 
+            { 
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect(); 
+                throw exception; 
             }
         }
 
-        //Delete a application from database
-        public Boolean DeleteData(int id)
+        public bool DeleteData(int id)
         {
             try
             {
-                connect();
+                Connect();
+                SetSqlComand("DELETE FROM Data WHERE Id = @id");
+                int n = Delete(id);
+                Disconnect();
 
-                setSqlComand("DELETE FROM Data WHERE Id=@IdApp");
-                int numRow = Delete(id);
-                disconnect();
-                if (numRow == 1)
-                {
-                    return true;
-                }
-                return false;
-
+                return n == 1;
             }
-            catch (Exception)
-            {
-                //fechar ligação à DB
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    disconnect();
-                }
-                return false;
+            catch (Exception exception) 
+            { 
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect(); 
+                throw exception; 
             }
         }
-        public override void readerIterator(SqlDataReader reader)
+
+        public override void ReaderIterator(SqlDataReader reader)
         {
-            this.data_list = new List<Data>();
+            data_list = new List<Data>();
             while (reader.Read())
             {
                 Data data = new Data
                 {
-                    Id = (int)reader["Id"],
-                    Content = (string)reader["Content"],
-                    Parent = (int)reader["Parent"],
-                    Creation_dt = new DateTime(),
+                    Id = (int) reader["Id"],
+                    Content = (string) reader["Content"],
+                    Parent = (int) reader["Parent"],
+                    Creation_dt = reader["Creation_dt"].ToString(),
                 };
-                this.data_list.Add(data);
+
+                data_list.Add(data);
             }
         }
     }
