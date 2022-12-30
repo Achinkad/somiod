@@ -10,7 +10,7 @@ namespace SOMIOD.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public DateTime Creation_dt { get; set; }
+        public string Creation_dt { get; set; }
         private List<Module> Modules { get; set; }
     }
 }

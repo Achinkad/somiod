@@ -175,7 +175,7 @@ namespace SOMIOD.Controllers
                 {
                     Id = (int) reader["id"],
                     Name = (string) reader["name"],
-                    Creation_dt = new DateTime(),
+                    Creation_dt = reader["Creation_dt"].ToString(),
                     Parent = (int) reader["parent"],
                 };
 
