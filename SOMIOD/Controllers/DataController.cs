@@ -2,18 +2,46 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.EnterpriseServices.Internal;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Web;
+using System.Windows;
+using uPLibrary.Networking.M2Mqtt;
+using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace SOMIOD.Controllers
 {
     public class DataController : DatabaseConnection
     {
         private List<Data> data_list;
+        MqttClient mClient = new MqttClient("127.0.0.1");
 
         public DataController()
         {
             data_list = new List<Data>();
+        }
+
+        public void Publish(string content, int parent_id)
+        {
+            mClient.Connect(Guid.NewGuid().ToString());
+
+            if (!mClient.IsConnected) throw new Exception("Error connecting to message broker...");
+
+            ModuleController module = new ModuleController();
+            Module parent_module = module.GetModule(parent_id);
+
+            if (parent_module == null) throw new Exception("There is no module associated with this data.");
+
+            try
+            {
+                mClient.Publish(parent_module.Name, Encoding.UTF8.GetBytes(content));
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
         }
 
         public List<Data> GetData()

@@ -235,14 +235,16 @@ namespace SOMIOD.Controllers
             {
                 case "data":
                     if (request_type != "data") return BadRequest("Request type is different from 'data'.");
-                    if (request["event"].ToString() != "creation") return BadRequest("Event type is different from 'creation' for this route.");
 
                     try
                     {
                         DataController data = new DataController();
                         bool response = data.Store(request.ToObject<Data>(), module.GetModuleByName(module_name));
                         if (!response) return BadRequest("Operation Failed");
-                        return Ok("A new Data was stored with success!");
+
+                        data.Publish(request.ToObject<Data>().Content, module.GetModuleByName(module_name));
+
+                        return Ok("A new Data was stored and published with success!");
                     }
                     catch (Exception exception)
                     {
@@ -251,6 +253,7 @@ namespace SOMIOD.Controllers
 
                 case "subscription":
                     if (request_type != "subscription") return BadRequest("Request type is different from 'subscription'.");
+                    if (request["event"].ToString() != "creation") return BadRequest("Event type is different from 'creation' for this route.");
 
                     try
                     {
