@@ -19,78 +19,56 @@ using System.Xml.Serialization;
 using uPLibrary.Networking.M2Mqtt;
 
 
-
 namespace MosquittoPublisher
 {
-
-
     public partial class Form1 : Form
     {
-        
         private static readonly HttpClient client = new HttpClient();
         List<string> app_names = new List<string>();
         List<string> app_ids = new List<string>();
+
         public Form1()
         {
             InitializeComponent();
-            
         }
 
-
-       async private void button1_Click(object sender, EventArgs e)
+        async private void button1_Click(object sender, EventArgs e)
         { 
-            
-            if(comboBox1.SelectedItem!=null)
+            if(comboBox1.SelectedItem != null)
             {
-                if (comboBox2.SelectedItem!=null)
+                if (comboBox2.SelectedItem != null)
                 {
-  
-                 /////////POST DO DATA ON
-                 var values_data = new Dictionary<string, string>
-                 {
-                 { "res_type", "data" },
-                 { "content", "on" }
-                                   
-                 };
+                    // -> POST DO DATA ON
+                    var values_data = new Dictionary<string, string> {
+                        { "res_type", "data" },
+                        { "content", "on" }                 
+                    };
 
-                var content_data = new StringContent(
-                                                     JsonConvert.SerializeObject(values_data),
-                                                     System.Text.Encoding.UTF8,
-                                                     "application/json"
-                                                     );
+                    var content_data = new StringContent(
+                        JsonConvert.SerializeObject(values_data),
+                        System.Text.Encoding.UTF8,
+                        "application/json"
+                    );
 
-                var response_data = await client.PostAsync("http://localhost:53818/api/somiod/"+ comboBox1.SelectedItem.ToString().ToLower()+"/"+ comboBox2.SelectedItem.ToString().ToLower(), content_data);
-
-                //var responseString_data = await response_data.Content.ReadAsStringAsync();
-
-
-                MessageBox.Show("DONE!");
-                    
+                    var response_data = await client.PostAsync("http://localhost:53818/api/somiod/"+ comboBox1.SelectedItem.ToString().ToLower()+"/"+ comboBox2.SelectedItem.ToString().ToLower(), content_data);
+                    MessageBox.Show("The information was sended successfully.", "Connection Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    MessageBox.Show("Choose a Module!");
+                    MessageBox.Show("Please, insert a module.", "Input Validations", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
             }
             else
             {
-                MessageBox.Show("Choose a Application!");
+                MessageBox.Show("Please, insert an application.", "Input Validations", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
-  
-
         }
 
-
        async private void comboBox1_Click(object sender, EventArgs e)
-        {
-            //GET PARA O DROPDOWN DOS APPS
-            
+       {
+            // -> GET PARA O DROPDOWN DOS APPS
             var response_GET = await client.GetAsync("http://localhost:53818/api/somiod/applications");
             var responseString_GET = await response_GET.Content.ReadAsStringAsync();
-
-            
 
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(responseString_GET);
@@ -98,22 +76,16 @@ namespace MosquittoPublisher
             XmlNodeList nodes_name = xmlDoc.SelectNodes("//*[local-name() = 'Name']");
             XmlNodeList nodes_id = xmlDoc.SelectNodes("//*[local-name() = 'Id']");
 
-           
-
             app_names.Clear();
-
             foreach (XmlNode node in nodes_name)
             {
                 app_names.Add(node.InnerText);
-
             }
-
 
             app_ids.Clear();
             foreach (XmlNode node in nodes_id)
             {
                 app_ids.Add(node.InnerText);
-   
             }
 
             comboBox1.Items.Clear();
@@ -121,26 +93,13 @@ namespace MosquittoPublisher
             {
                 comboBox1.Items.Add(name);
             }
-
-        }
-
-        private void comboBox2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
+       }
 
        async private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
+       {
             //GET PARA O DROPDOWN DOS MODULES
-            //MessageBox.Show(comboBox1.SelectedIndex.ToString());
             var response_GET = await client.GetAsync("http://localhost:53818/api/somiod/applications/"+ app_ids[comboBox1.SelectedIndex] + "/modules");
             var responseString_GET = await response_GET.Content.ReadAsStringAsync();
-
 
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(responseString_GET);
@@ -154,7 +113,6 @@ namespace MosquittoPublisher
             foreach (XmlNode node in nodes_name)
             {
                 module_names.Add(node.InnerText);
-
             }
 
             comboBox2.Items.Clear();
@@ -162,50 +120,38 @@ namespace MosquittoPublisher
             {
                 comboBox2.Items.Add(name);
             }
-
-            
-        }
+       }
 
        async private void button2_Click(object sender, EventArgs e)
-        {
+       {
             if (comboBox1.SelectedItem != null)
             {
                 if (comboBox2.SelectedItem != null)
                 {
-
-                 /////////POST DO DATA ON
-                 var values_data = new Dictionary<string, string>
-                 {
-                 { "res_type", "data" },
-                 { "content", "off" }
-
-                 };
+                    // -> POST DO DATA OFF
+                    var values_data = new Dictionary<string, string> {
+                        { "res_type", "data" },
+                        { "content", "off" }
+                    };
 
                     var content_data = new StringContent(
-                                                         JsonConvert.SerializeObject(values_data),
-                                                         System.Text.Encoding.UTF8,
-                                                         "application/json"
-                                                         );
+                        JsonConvert.SerializeObject(values_data),
+                        System.Text.Encoding.UTF8,
+                        "application/json"
+                    );
 
-                    var response_data = await client.PostAsync("http://localhost:53818/api/somiod/" + comboBox1.SelectedItem.ToString().ToLower() + "/" + comboBox2.SelectedItem.ToString().ToLower(), content_data);
-
-                    //var responseString_data = await response_data.Content.ReadAsStringAsync();
-
-
-                    MessageBox.Show("DONE!");
-
+                    await client.PostAsync("http://localhost:53818/api/somiod/" + comboBox1.SelectedItem.ToString().ToLower() + "/" + comboBox2.SelectedItem.ToString().ToLower(), content_data);
+                    MessageBox.Show("The information was sended successfully.", "Connection Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    MessageBox.Show("Choose a Module!");
+                    MessageBox.Show("Please insert a module.", "Input Validations", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
             }
             else
             {
-                MessageBox.Show("Choose a Application!");
+                MessageBox.Show("Please insert an application.", "Input Validations", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
     }
 }
