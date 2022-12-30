@@ -9,7 +9,7 @@ CREATE TABLE [dbo].[applications] (
 
 CREATE TABLE [dbo].[modules] (
     [Id]          INT               IDENTITY,
-    [name]        NVARCHAR (50)     NOT NULL UNIQUE,
+    [name]        NVARCHAR (50)     NOT NULL,
     [creation_dt] DATETIME2 (7)     NULL,
     [parent]      INT               NOT NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC),
