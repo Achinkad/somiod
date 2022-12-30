@@ -41,6 +41,26 @@ namespace SOMIOD.Controllers
             return new List<Module>(this.modules);
         }
 
+        public List<Module> GetModulesByApplication(int id)
+        {
+            List<Module> modules = new List<Module>();
+            SetSqlComand("SELECT * FROM modules WHERE parent = @id ORDER BY Id");
+
+            try
+            {
+                Connect();
+                Select(id);
+                Disconnect();
+            }
+            catch (Exception exception)
+            {
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
+            }
+
+            return new List<Module>(this.modules);
+        }
+
         public Module GetModule(int id)
         {
             try
