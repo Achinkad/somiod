@@ -1,14 +1,21 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
+using System.Reflection;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 using uPLibrary.Networking.M2Mqtt;
 
 
@@ -19,42 +26,180 @@ namespace MosquittoPublisher
 
     public partial class Form1 : Form
     {
-        MqttClient mClient = new MqttClient("127.0.0.1");
+        
+        private static readonly HttpClient client = new HttpClient();
+        List<string> app_names = new List<string>();
+        List<string> app_ids = new List<string>();
         public Form1()
         {
             InitializeComponent();
             
         }
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            mClient.Connect(Guid.NewGuid().ToString());
-            if (!mClient.IsConnected)
+
+
+       async private void button1_Click(object sender, EventArgs e)
+        { 
+            
+            if(comboBox1.SelectedItem!=null)
             {
-                MessageBox.Show("Error connecting to lightbulb...");
-                return;
+                if (comboBox2.SelectedItem!=null)
+                {
+                    if (textBoxCommModule.Text!=string.Empty)
+                    {
+                        if (textBoxComm.Text!= string.Empty)
+                        {
+                            MessageBox.Show(textBoxComm.Text);
+                            MessageBox.Show(textBoxCommModule.Text);
+                            /////////POST DO DATA ON
+                            var values_data = new Dictionary<string, string>
+                              {
+                                  { "res_type", "data" },
+                                  { "content", textBoxComm.Text }
+                              };
+
+                            var content_data = new StringContent(
+                                                                  JsonConvert.SerializeObject(values_data),
+                                                                   System.Text.Encoding.UTF8,
+                                                                   "application/json"
+                                                                   );
+
+                            var response_data = await client.PostAsync("http://localhost:53818/api/somiod/"+ comboBox1.SelectedItem.ToString().ToLower()+"/"+ comboBox2.SelectedItem.ToString().ToLower(), content_data);
+
+                            //var responseString_data = await response_data.Content.ReadAsStringAsync();
+
+                           
+
+                            /////////POST DO MODULE COMMAND
+
+                            var values_module = new Dictionary<string, string>
+                          {
+                              { "res_type", "module" },
+                              { "name", textBoxCommModule.Text }
+                          };
+
+                            var content_module = new StringContent(
+                                                                  JsonConvert.SerializeObject(values_module),
+                                                                   System.Text.Encoding.UTF8,
+                                                                   "application/json"
+                                                                   );
+
+                            var response_module = await client.PostAsync("http://localhost:53818/api/somiod/" + comboBox1.SelectedItem.ToString().ToLower(), content_module);
+
+                            //var responseString_module = await response_module.Content.ReadAsStringAsync();
+
+
+                            MessageBox.Show("DONE!");
+
+                        }
+                        else
+                        {
+                            MessageBox.Show("Write the command  name!");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Write the command Module name!");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Choose a Module!");
+                }
+
             }
+            else
+            {
+                MessageBox.Show("Choose a Application!");
+            }
+            
+  
+
         }
 
-        private void button1_Click(object sender, EventArgs e)
+
+       async private void comboBox1_Click(object sender, EventArgs e)
         {
-            if (mClient.IsConnected)
+            //GET PARA O DROPDOWN DOS APPS
+            
+            var response_GET = await client.GetAsync("http://localhost:53818/api/somiod/applications");
+            var responseString_GET = await response_GET.Content.ReadAsStringAsync();
+
+            
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(responseString_GET);
+
+            XmlNodeList nodes_name = xmlDoc.SelectNodes("//*[local-name() = 'Name']");
+            XmlNodeList nodes_id = xmlDoc.SelectNodes("//*[local-name() = 'Id']");
+
+           
+
+            app_names.Clear();
+
+            foreach (XmlNode node in nodes_name)
             {
-              
-                MessageBox.Show("aaa");
-                mClient.Publish("light_bulb", Encoding.UTF8.GetBytes("on"));
+                app_names.Add(node.InnerText);
+
             }
 
 
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (mClient.IsConnected)
+            app_ids.Clear();
+            foreach (XmlNode node in nodes_id)
             {
-
-                MessageBox.Show("bbb");
-                mClient.Publish("light_bulb", Encoding.UTF8.GetBytes("off"));
+                app_ids.Add(node.InnerText);
+   
             }
+
+            comboBox1.Items.Clear();
+            foreach (String name in app_names)
+            {
+                comboBox1.Items.Add(name);
+            }
+
         }
+
+        private void comboBox2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+       async private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //GET PARA O DROPDOWN DOS MODULES
+            //MessageBox.Show(comboBox1.SelectedIndex.ToString());
+            var response_GET = await client.GetAsync("http://localhost:53818/api/somiod/applications/"+ app_ids[comboBox1.SelectedIndex] + "/modules");
+            var responseString_GET = await response_GET.Content.ReadAsStringAsync();
+
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(responseString_GET);
+
+            XmlNodeList nodes_name = xmlDoc.SelectNodes("//*[local-name() = 'Name']");
+
+            List<string> module_names = new List<string>();
+
+            module_names.Clear();
+
+            foreach (XmlNode node in nodes_name)
+            {
+                module_names.Add(node.InnerText);
+
+            }
+
+            comboBox2.Items.Clear();
+            foreach (String name in module_names)
+            {
+                comboBox2.Items.Add(name);
+            }
+
+            
+        }
+
+       
     }
 }
