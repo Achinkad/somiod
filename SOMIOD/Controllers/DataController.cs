@@ -82,6 +82,25 @@ namespace SOMIOD.Controllers
             }
         }
 
+        public List<Data> GetDataByModule(int id)
+        {
+            SetSqlComand("SELECT * FROM data WHERE parent = @id ORDER BY Id");
+
+            try
+            {
+                Connect();
+                Select(id);
+                Disconnect();
+            }
+            catch (Exception exception)
+            {
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
+            }
+
+            return new List<Data>(this.data_list);
+        }
+
         public bool Store(Data value, int parent_id)
         {
             try

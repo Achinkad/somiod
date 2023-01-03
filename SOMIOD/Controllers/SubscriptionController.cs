@@ -17,6 +17,25 @@ namespace SOMIOD.Controllers
             subscriptions = new List<Subscription>();
         }
 
+        public List<Subscription> GetSubscriptionByModule(int id)
+        {
+            SetSqlComand("SELECT * FROM subscriptions WHERE parent = @id ORDER BY Id");
+
+            try
+            {
+                Connect();
+                Select(id);
+                Disconnect();
+            }
+            catch (Exception exception)
+            {
+                if (conn.State == System.Data.ConnectionState.Open) Disconnect();
+                throw exception;
+            }
+
+            return new List<Subscription>(this.subscriptions);
+        }
+
         public bool Store(Subscription subscription, int parent_id)
         {
             // Check if Event String is "Creation" or "Deletion"

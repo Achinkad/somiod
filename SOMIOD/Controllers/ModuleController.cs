@@ -154,6 +154,28 @@ namespace SOMIOD.Controllers
             try
             {
                 Connect();
+                DataController dc = new DataController();
+                SubscriptionController sc = new SubscriptionController();
+
+                List<Data> dl = new List<Data>();
+                List<Subscription> sl = new List<Subscription>();
+                dl = dc.GetDataByModule(id);
+                sl = sc.GetSubscriptionByModule(id);
+                if (dl != null)
+                {
+                    foreach (Data data in dl)
+                    {
+                        dc.DeleteData(data.Id);
+                    }
+                }
+                if (sl != null)
+                {
+                    foreach (Subscription s in sl)
+                    {
+                        sc.DeleteSubcription(s.Id);
+                    }
+                }
+
                 SetSqlComand("DELETE FROM modules WHERE id = @id");
                 int n = Delete(id);
                 Disconnect();

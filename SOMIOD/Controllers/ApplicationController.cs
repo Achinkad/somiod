@@ -134,8 +134,18 @@ namespace SOMIOD.Controllers
             try
             {
                 Connect();
+                ModuleController mc = new ModuleController();
+                List<Module> ml = mc.GetModulesByApplication(id);
+                if (ml != null)
+                {
+                    foreach (Module m in ml)
+                    {
+                        mc.DeleteModule(m.Id);
+                    }
+                } 
                 SetSqlComand("DELETE FROM applications WHERE Id=@id");
                 int n = Delete(id);
+               
                 Disconnect();
 
                 return n == 1;
